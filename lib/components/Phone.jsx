@@ -469,10 +469,15 @@ export default class Phone extends React.Component
 		logger.debug('handleAnswerIncoming()');
 
 		const session = this.state.incomingSession;
+		const videoConstraints = defineResolution(this.props.settings.resolution);
 
 		session.answer(
 			{
-				pcConfig : this.props.settings.pcConfig || { iceServers: [] }
+				pcConfig : this.props.settings.pcConfig || { iceServers: [] },
+				mediaConstraints :
+				{
+					video: videoConstraints,
+				},
 			});
 	}
 
@@ -481,6 +486,7 @@ export default class Phone extends React.Component
 		logger.debug('handleRejectIncoming()');
 
 		const session = this.state.incomingSession;
+
 
 		session.terminate();
 	}
