@@ -30,29 +30,17 @@ const sdpLog = ({originator,type,sdp}) =>
 	logger.debug('sdp sdp : ', sdp);
 };
 
-const qvgaConstraints = {
-  video: {width: {exact: 320}, height: {exact: 240}}
-};
+const qvgaConstraints = {width: {exact: 320}, height: {exact: 240}};
 
-const vgaConstraints = {
-  video: {width: {exact: 640}, height: {exact: 480}}
-};
+const vgaConstraints = {width: {exact: 640}, height: {exact: 480}};
 
-const hdConstraints = {
-  video: {width: {exact: 1280}, height: {exact: 720}}
-};
+const hdConstraints = {width: {exact: 1280}, height: {exact: 720}};
 
-const fullHdConstraints = {
-  video: {width: {exact: 1920}, height: {exact: 1080}}
-};
+const fullHdConstraints = {width: {exact: 1920}, height: {exact: 1080}};
 
-const fourKConstraints = {
-  video: {width: {exact: 4096}, height: {exact: 2160}}
-};
+const fourKConstraints = {width: {exact: 4096}, height: {exact: 2160}};
 
-const eightKConstraints = {
-  video: {width: {exact: 7680}, height: {exact: 4320}}
-};
+const eightKConstraints = {width: {exact: 7680}, height: {exact: 4320}};
 
 function defineResolution(wantedResolution) {
 	let videoConstraints;
@@ -411,6 +399,7 @@ export default class Phone extends React.Component
 		logger.debug('handleOutgoingCall() [uri:"%s"]', uri);
 
 		const videoConstraints = defineResolution(this.props.settings.resolution);
+		logger.debug('selected resolution : ', videoConstraints);
 
 		const session = this._ua.call(uri,
 			{
@@ -420,7 +409,7 @@ export default class Phone extends React.Component
 					audio : true,
 					// video : true
 					// video: {width: {exact: 1280}, height: {exact: 1080}}
-					videoConstraints,
+					video: videoConstraints,
 				},
 				rtcOfferConstraints :
 				{
