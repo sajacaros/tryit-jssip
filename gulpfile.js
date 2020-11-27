@@ -227,7 +227,8 @@ gulp.task('openbrowser', (done) =>
 			{
 				baseDir : OUTPUT_DIR
 			},
-			https     : true,
+			// https     : true,
+			https     : false,
 			ghostMode : false,
 			files     : path.join(OUTPUT_DIR, '**', '*')
 		});

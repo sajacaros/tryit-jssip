@@ -17,6 +17,7 @@ import Incoming from './Incoming';
 
 // TODO: For testing.
 window.jssip = JsSIP;
+window.jssip.debug.enable('JsSIP:*');
 
 const callstatsjssip = window.callstatsjssip;
 
@@ -185,6 +186,16 @@ export default class Phone extends React.Component
 			logger.debug('UA "connected" event');
 
 			this.setState({ status: 'connected' });
+		});
+
+		this._ua.on('sdp', ({originator, type, sdp}) =>
+		{
+			if (!this._mounted)
+				return;
+
+			logger.debug('sdp originator : ', originator);
+			logger.debug('sdp type : ', type);
+			logger.debug('sdp sdp : ', sdp);
 		});
 
 		this._ua.on('disconnected', () =>
