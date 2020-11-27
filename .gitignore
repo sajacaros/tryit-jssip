@@ -2,3 +2,4 @@
 /out
 /resources/js/callstats.*
 .DS_Store
+debug.log
