@@ -17,7 +17,7 @@ import Incoming from './Incoming';
 
 // TODO: For testing.
 window.jssip = JsSIP;
-// window.jssip.debug.enable('JsSIP:*');
+window.jssip.debug.enable('JsSIP:*');
 
 const callstatsjssip = window.callstatsjssip;
 
