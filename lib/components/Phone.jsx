@@ -43,20 +43,27 @@ const fourKConstraints = {width: {exact: 4096}, height: {exact: 2160}};
 const eightKConstraints = {width: {exact: 7680}, height: {exact: 4320}};
 
 function defineResolution(wantedResolution) {
+	logger.debug('wanted resolution : ', wantedResolution);
 	let videoConstraints;
 	switch(wantedResolution) {
 		case 'QVGA': 
 			videoConstraints = qvgaConstraints;
+			break;
 		case 'VGA': 
 			videoConstraints = vgaConstraints;
+			break;
 		case 'HD': 
 			videoConstraints = hdConstraints;
+			break;
 		case 'FULLHD': 
 			videoConstraints = fullHdConstraints;
+			break;
 		case 'FOURK': 
 			videoConstraints = fourKConstraints;
+			break;
 		case 'EIGHTK': 
 			videoConstraints = eightKConstraints;
+			break;
 		default:
 			videoConstraints = hdConstraints;
 	}
