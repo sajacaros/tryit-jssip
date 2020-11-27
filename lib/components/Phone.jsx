@@ -54,6 +54,27 @@ const eightKConstraints = {
   video: {width: {exact: 7680}, height: {exact: 4320}}
 };
 
+function defineResolution(wantedResolution) {
+	let videoConstraints;
+	switch(wantedResolution) {
+		case 'QVGA': 
+			videoConstraints = qvgaConstraints;
+		case 'VGA': 
+			videoConstraints = vgaConstraints;
+		case 'HD': 
+			videoConstraints = hdConstraints;
+		case 'FULLHD': 
+			videoConstraints = fullHdConstraints;
+		case 'FOURK': 
+			videoConstraints = fourKConstraints;
+		case 'EIGHTK': 
+			videoConstraints = eightKConstraints;
+		default:
+			videoConstraints = hdConstraints;
+	}
+	return videoConstraints;
+}
+
 export default class Phone extends React.Component
 {
 	constructor(props)
@@ -385,32 +406,11 @@ export default class Phone extends React.Component
 		this.props.onExit();
 	}
 
-	defineResolution() {
-		let videoConstraints;
-		switch(this.props.settings.resolution) {
-			case 'QVGA': 
-				videoConstraints = qvgaConstraints;
-			case 'VGA': 
-				videoConstraints = vgaConstraints;
-			case 'HD': 
-				videoConstraints = hdConstraints;
-			case 'FULLHD': 
-				videoConstraints = fullHdConstraints;
-			case 'FOURK': 
-				videoConstraints = fourKConstraints;
-			case 'EIGHTK': 
-				videoConstraints = eightKConstraints;
-			default:
-				videoConstraints = hdConstraints;
-		}
-		return videoConstraints;
-	}
-
 	handleOutgoingCall(uri)
 	{
 		logger.debug('handleOutgoingCall() [uri:"%s"]', uri);
 
-		const videoConstraints = defineResolution();
+		const videoConstraints = defineResolution(this.props.settings.resolution);
 
 		const session = this._ua.call(uri,
 			{
