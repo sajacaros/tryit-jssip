@@ -82,6 +82,22 @@ export default class Settings extends React.Component
 					</div>
 
 					<div className='item'>
+						<SelectField
+							floatingLabelText='resolution'
+							value={settings.resolution || 'HD'}
+							fullWidth
+							onChange={this.handleChangeResolution.bind(this)}
+						>
+							<MenuItem value='QVGA' primaryText='QVGA'/>
+							<MenuItem value='VGA' primaryText='VGA'/>
+							<MenuItem value='HD' primaryText='HD'/>
+							<MenuItem value='FULLHD' primaryText='FULL HD'/>
+							<MenuItem value='FOURK' primaryText='4K'/>
+							<MenuItem value='EIGHTK' primaryText='8K'/>
+						</SelectField>
+					</div>
+
+					{/* <div className='item'>
 						<TextField
 							floatingLabelText='Registrar server'
 							value={settings.registrar_server || ''}
@@ -89,9 +105,9 @@ export default class Settings extends React.Component
 							fullWidth
 							onChange={this.handleChangeRegistrarServer.bind(this)}
 						/>
-					</div>
+					</div> */}
 
-					<div className='item'>
+					{/* <div className='item'>
 						<TextField
 							floatingLabelText='Contact URI'
 							value={settings.contact_uri || ''}
@@ -109,9 +125,9 @@ export default class Settings extends React.Component
 							fullWidth
 							onChange={this.handleChangeAuthorizationUser.bind(this)}
 						/>
-					</div>
+					</div> */}
 
-					<div className='item'>
+					{/* <div className='item'>
 						<TextField
 							floatingLabelText='Instance ID'
 							value={settings.instance_id || ''}
@@ -119,7 +135,7 @@ export default class Settings extends React.Component
 							fullWidth
 							onChange={this.handleChangeInstanceId.bind(this)}
 						/>
-					</div>
+					</div> */}
 
 					<div className='separator'/>
 
@@ -151,9 +167,9 @@ export default class Settings extends React.Component
 
 					<div className='separator'/>
 
-					<h1>callstats.io settings</h1>
+					{/* <h1>callstats.io settings</h1> */}
 
-					<List>
+					{/* <List>
 						<ListItem
 							primaryText='Enabled'
 							secondaryText='Send call statistics to callstats.io'
@@ -191,7 +207,7 @@ export default class Settings extends React.Component
 						/>
 					</div>
 
-					<div className='separator'/>
+					<div className='separator'/> */}
 
 					<div className='buttons'>
 						<RaisedButton
@@ -245,6 +261,14 @@ export default class Settings extends React.Component
 		this.setState({ settings });
 	}
 
+	handleChangeResolution(event, key, value) 
+	{
+		const settings = this.state.settings;
+
+		settings.resolution = value;
+		this.setState({ settings });
+	}
+
 	handleChangeRegistrarServer(event)
 	{
 		const settings = this.state.settings;
@@ -269,13 +293,13 @@ export default class Settings extends React.Component
 		this.setState({ settings });
 	}
 
-	handleChangeInstanceId(event)
-	{
-		const settings = this.state.settings;
+	// handleChangeInstanceId(event)
+	// {
+	// 	const settings = this.state.settings;
 
-		settings['instance_id'] = event.target.value;
-		this.setState({ settings });
-	}
+	// 	settings['instance_id'] = event.target.value;
+	// 	this.setState({ settings });
+	// }
 
 	handleToogleSessionTimers()
 	{
@@ -293,29 +317,29 @@ export default class Settings extends React.Component
 		this.setState({ settings });
 	}
 
-	handleToogleCallstatsEnabled()
-	{
-		const settings = this.state.settings;
+	// handleToogleCallstatsEnabled()
+	// {
+	// 	const settings = this.state.settings;
 
-		settings['callstats']['enabled'] = !settings.callstats.enabled;
-		this.setState({ settings });
-	}
+	// 	settings['callstats']['enabled'] = !settings.callstats.enabled;
+	// 	this.setState({ settings });
+	// }
 
-	handleChangeCallstatsAppID(event)
-	{
-		const settings = this.state.settings;
+	// handleChangeCallstatsAppID(event)
+	// {
+	// 	const settings = this.state.settings;
 
-		settings.callstats.AppID = event.target.value;
-		this.setState({ settings });
-	}
+	// 	settings.callstats.AppID = event.target.value;
+	// 	this.setState({ settings });
+	// }
 
-	handleChangeCallstatsAppSecret(event)
-	{
-		const settings = this.state.settings;
+	// handleChangeCallstatsAppSecret(event)
+	// {
+	// 	const settings = this.state.settings;
 
-		settings.callstats.AppSecret = event.target.value;
-		this.setState({ settings });
-	}
+	// 	settings.callstats.AppSecret = event.target.value;
+	// 	this.setState({ settings });
+	// }
 
 	handleSubmit()
 	{

@@ -17,11 +17,42 @@ import Incoming from './Incoming';
 
 // TODO: For testing.
 window.jssip = JsSIP;
-window.jssip.debug.enable('JsSIP:*');
+// window.jssip.debug.enable('JsSIP:*');
 
 const callstatsjssip = window.callstatsjssip;
 
 const logger = new Logger('Phone');
+
+const sdpLog = ({originator,type,sdp}) =>
+{
+	logger.debug('sdp originator : ', originator);
+	logger.debug('sdp type : ', type);
+	logger.debug('sdp sdp : ', sdp);
+};
+
+const qvgaConstraints = {
+  video: {width: {exact: 320}, height: {exact: 240}}
+};
+
+const vgaConstraints = {
+  video: {width: {exact: 640}, height: {exact: 480}}
+};
+
+const hdConstraints = {
+  video: {width: {exact: 1280}, height: {exact: 720}}
+};
+
+const fullHdConstraints = {
+  video: {width: {exact: 1920}, height: {exact: 1080}}
+};
+
+const fourKConstraints = {
+  video: {width: {exact: 4096}, height: {exact: 2160}}
+};
+
+const eightKConstraints = {
+  video: {width: {exact: 7680}, height: {exact: 4320}}
+};
 
 export default class Phone extends React.Component
 {
@@ -188,16 +219,6 @@ export default class Phone extends React.Component
 			this.setState({ status: 'connected' });
 		});
 
-		this._ua.on('sdp', ({originator, type, sdp}) =>
-		{
-			if (!this._mounted)
-				return;
-
-			logger.debug('sdp originator : ', originator);
-			logger.debug('sdp type : ', type);
-			logger.debug('sdp sdp : ', sdp);
-		});
-
 		this._ua.on('disconnected', () =>
 		{
 			if (!this._mounted)
@@ -312,6 +333,8 @@ export default class Phone extends React.Component
 						incomingSession : null
 					});
 			});
+
+			session.on('sdp', sdpLog);
 		});
 
 		this._ua.start();
@@ -362,9 +385,32 @@ export default class Phone extends React.Component
 		this.props.onExit();
 	}
 
+	defineResolution() {
+		let videoConstraints;
+		switch(this.props.settings.resolution) {
+			case 'QVGA': 
+				videoConstraints = qvgaConstraints;
+			case 'VGA': 
+				videoConstraints = vgaConstraints;
+			case 'HD': 
+				videoConstraints = hdConstraints;
+			case 'FULLHD': 
+				videoConstraints = fullHdConstraints;
+			case 'FOURK': 
+				videoConstraints = fourKConstraints;
+			case 'EIGHTK': 
+				videoConstraints = eightKConstraints;
+			default:
+				videoConstraints = hdConstraints;
+		}
+		return videoConstraints;
+	}
+
 	handleOutgoingCall(uri)
 	{
 		logger.debug('handleOutgoingCall() [uri:"%s"]', uri);
+
+		const videoConstraints = defineResolution();
 
 		const session = this._ua.call(uri,
 			{
@@ -372,7 +418,9 @@ export default class Phone extends React.Component
 				mediaConstraints :
 				{
 					audio : true,
-					video : true
+					// video : true
+					// video: {width: {exact: 1280}, height: {exact: 1080}}
+					videoConstraints,
 				},
 				rtcOfferConstraints :
 				{
@@ -416,6 +464,8 @@ export default class Phone extends React.Component
 			audioPlayer.stop('ringback');
 			audioPlayer.play('answered');
 		});
+		session.on('sdp', sdpLog);
+		
 	}
 
 	handleAnswerIncoming()
