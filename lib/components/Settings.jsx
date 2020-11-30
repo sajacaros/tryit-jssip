@@ -119,8 +119,8 @@ export default class Settings extends React.Component
 							onChange={this.handleChangeVideoCodec.bind(this)}
 						>
 							<MenuItem value='video/H264' primaryText='H264'/>
-							<MenuItem value='video/V8' primaryText='V8'/>
-							<MenuItem value='video/V9' primaryText='V9'/>
+							<MenuItem value='video/VP8' primaryText='VP8'/>
+							<MenuItem value='video/VP9' primaryText='VP9'/>
 						</SelectField>
 					</div>
 
