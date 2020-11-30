@@ -70,6 +70,44 @@ function defineResolution(wantedResolution) {
 	return videoConstraints;
 }
 
+function preferCodec(codecs, mimeType) {
+  let otherCodecs = [];
+  let sortedCodecs = [];
+
+  codecs.forEach(codec => {
+    if (codec.mimeType === mimeType) {
+      sortedCodecs.push(codec);
+    } else {
+      otherCodecs.push(codec);
+    }
+  });
+
+  return sortedCodecs;//.concat(otherCodecs);
+}
+
+function changeCodec(peerConnection, audioMimeType, videoMimeType) {
+	logger.debug("codec change, audio : ", audioMimeType, ", video : ", videoMimeType);
+  const transceivers = peerConnection.getTransceivers();
+
+  transceivers.forEach(transceiver => {
+    const kind = transceiver.sender.track.kind;
+		let sendCodecs = RTCRtpSender.getCapabilities(kind).codecs;
+		let recvCodecs = RTCRtpReceiver.getCapabilities(kind).codecs;
+		
+    if (kind === "audio") {
+			sendCodecs = preferCodec(sendCodecs, audioMimeType);
+      recvCodecs = preferCodec(recvCodecs, audioMimeType);
+      transceiver.setCodecPreferences([...sendCodecs, ...recvCodecs]);
+		} else if(kind === 'video') {
+      sendCodecs = preferCodec(sendCodecs, videoMimeType);
+      recvCodecs = preferCodec(recvCodecs, videoMimeType);
+      transceiver.setCodecPreferences([...sendCodecs, ...recvCodecs]);
+		}
+  });
+
+  // peerConnection.onnegotiationneeded();
+}
+
 export default class Phone extends React.Component
 {
 	constructor(props)
@@ -150,10 +188,10 @@ export default class Phone extends React.Component
 						<If condition={state.session}>
 							<Session
 								session={state.session}
-								audioCodec={props.settings.audioCodec}
-								videoCodec={props.settings.videoCodec}
 								onNotify={props.onNotify}
 								onHideNotification={props.onHideNotification}
+								audioCodec={props.settings.audioCodec}
+								videoCodec={props.settings.videoCodec}
 							/>
 						</If>
 
@@ -352,7 +390,10 @@ export default class Phone extends React.Component
 					});
 			});
 
-			session.on('sdp', sdpLog);
+			session.on('sdp',sdpLog);
+			session.on('peerconnection', ({peerconnection})=>{
+				changeCodec(peerconnection, settings.audioCodec, settings.videoCodec);
+			});
 		});
 
 		this._ua.start();
@@ -427,6 +468,8 @@ export default class Phone extends React.Component
 				}
 			});
 
+		// changeCodec(session.connection, this.props.settings.audioCodec, this.props.settings.videoCodec);
+
 		session.on('connecting', () =>
 		{
 			this.setState({ session });
@@ -462,6 +505,7 @@ export default class Phone extends React.Component
 			audioPlayer.stop('ringback');
 			audioPlayer.play('answered');
 		});
+
 		session.on('sdp', sdpLog);
 		
 	}
@@ -472,6 +516,7 @@ export default class Phone extends React.Component
 
 		const session = this.state.incomingSession;
 		const videoConstraints = defineResolution(this.props.settings.resolution);
+		// changeCodec(session.connection, this.props.settings.audioCodec, this.props.settings.videoCodec);
 
 		session.answer(
 			{

@@ -9,7 +9,6 @@ import Logger from '../Logger';
 import TransitionAppear from './TransitionAppear';
 
 const logger = new Logger('Session');
-
 function preferCodec(codecs, mimeType) {
   let otherCodecs = [];
   let sortedCodecs = [];
@@ -152,9 +151,10 @@ export default class Session extends React.Component
 		const localVideo = this.refs.localVideo;
 		const session = this.props.session;
 		const peerconnection = session.connection;
-		changeCodec(peerconnection, this.props.audioCodec, this.props.videoCodec);
 		const localStream = peerconnection.getLocalStreams()[0];
 		const remoteStream = peerconnection.getRemoteStreams()[0];
+
+		changeCodec(session.connection, this.props.audioCodec, this.props.videoCodec);
 
 		// Handle local stream
 		if (localStream)
@@ -409,6 +409,6 @@ Session.propTypes =
 	session            : PropTypes.object.isRequired,
 	onNotify           : PropTypes.func.isRequired,
 	onHideNotification : PropTypes.func.isRequired,
-	audioCodec				 : PropTypes.string.isRequired,
-	videoCodec				 : PropTypes.string.isRequired
+	audioCodec : PropTypes.string.isRequired,
+	videoCodec : PropTypes.string.isRequired,
 };

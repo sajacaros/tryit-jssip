@@ -124,46 +124,6 @@ export default class Settings extends React.Component
 						</SelectField>
 					</div>
 
-					{/* <div className='item'>
-						<TextField
-							floatingLabelText='Registrar server'
-							value={settings.registrar_server || ''}
-							floatingLabelFixed
-							fullWidth
-							onChange={this.handleChangeRegistrarServer.bind(this)}
-						/>
-					</div> */}
-
-					{/* <div className='item'>
-						<TextField
-							floatingLabelText='Contact URI'
-							value={settings.contact_uri || ''}
-							floatingLabelFixed
-							fullWidth
-							onChange={this.handleChangeContactUri.bind(this)}
-						/>
-					</div>
-
-					<div className='item'>
-						<TextField
-							floatingLabelText='Authorization user'
-							value={settings.authorization_user || ''}
-							floatingLabelFixed
-							fullWidth
-							onChange={this.handleChangeAuthorizationUser.bind(this)}
-						/>
-					</div> */}
-
-					{/* <div className='item'>
-						<TextField
-							floatingLabelText='Instance ID'
-							value={settings.instance_id || ''}
-							floatingLabelFixed
-							fullWidth
-							onChange={this.handleChangeInstanceId.bind(this)}
-						/>
-					</div> */}
-
 					<div className='separator'/>
 
 					<List>
@@ -193,48 +153,6 @@ export default class Settings extends React.Component
 					</List>
 
 					<div className='separator'/>
-
-					{/* <h1>callstats.io settings</h1> */}
-
-					{/* <List>
-						<ListItem
-							primaryText='Enabled'
-							secondaryText='Send call statistics to callstats.io'
-							secondaryTextLines={1}
-							rightToggle={
-								<Toggle
-									defaultToggled={settings.callstats.enabled}
-									onToggle={this.handleToogleCallstatsEnabled.bind(this)}
-								/>
-							}
-						/>
-					</List>
-
-					<div className='separator'/>
-
-					<div className='item'>
-						<TextField
-							floatingLabelText='AppID'
-							value={settings.callstats.AppID || ''}
-							disabled={!settings.callstats.enabled}
-							floatingLabelFixed
-							fullWidth
-							onChange={this.handleChangeCallstatsAppID.bind(this)}
-						/>
-					</div>
-
-					<div className='item'>
-						<TextField
-							floatingLabelText='AppSecret'
-							value={settings.callstats.AppSecret || ''}
-							disabled={!settings.callstats.enabled}
-							floatingLabelFixed
-							fullWidth
-							onChange={this.handleChangeCallstatsAppSecret.bind(this)}
-						/>
-					</div>
-
-					<div className='separator'/> */}
 
 					<div className='buttons'>
 						<RaisedButton
@@ -337,14 +255,6 @@ export default class Settings extends React.Component
 		this.setState({ settings });
 	}
 
-	// handleChangeInstanceId(event)
-	// {
-	// 	const settings = this.state.settings;
-
-	// 	settings['instance_id'] = event.target.value;
-	// 	this.setState({ settings });
-	// }
-
 	handleToogleSessionTimers()
 	{
 		const settings = this.state.settings;
@@ -360,30 +270,6 @@ export default class Settings extends React.Component
 		settings['use_preloaded_route'] = !settings.use_preloaded_route;
 		this.setState({ settings });
 	}
-
-	// handleToogleCallstatsEnabled()
-	// {
-	// 	const settings = this.state.settings;
-
-	// 	settings['callstats']['enabled'] = !settings.callstats.enabled;
-	// 	this.setState({ settings });
-	// }
-
-	// handleChangeCallstatsAppID(event)
-	// {
-	// 	const settings = this.state.settings;
-
-	// 	settings.callstats.AppID = event.target.value;
-	// 	this.setState({ settings });
-	// }
-
-	// handleChangeCallstatsAppSecret(event)
-	// {
-	// 	const settings = this.state.settings;
-
-	// 	settings.callstats.AppSecret = event.target.value;
-	// 	this.setState({ settings });
-	// }
 
 	handleSubmit()
 	{
