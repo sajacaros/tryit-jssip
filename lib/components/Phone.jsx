@@ -516,7 +516,7 @@ export default class Phone extends React.Component
 
 		const session = this.state.incomingSession;
 		const videoConstraints = defineResolution(this.props.settings.resolution);
-		// changeCodec(session.connection, this.props.settings.audioCodec, this.props.settings.videoCodec);
+		changeCodec(session.connection, this.props.settings.audioCodec, this.props.settings.videoCodec);
 
 		session.answer(
 			{
