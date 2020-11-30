@@ -150,6 +150,8 @@ export default class Phone extends React.Component
 						<If condition={state.session}>
 							<Session
 								session={state.session}
+								audioCodec={props.settings.audioCodec}
+								videoCodec={props.settings.videoCodec}
 								onNotify={props.onNotify}
 								onHideNotification={props.onHideNotification}
 							/>

@@ -10,6 +10,44 @@ import TransitionAppear from './TransitionAppear';
 
 const logger = new Logger('Session');
 
+function preferCodec(codecs, mimeType) {
+  let otherCodecs = [];
+  let sortedCodecs = [];
+
+  codecs.forEach(codec => {
+    if (codec.mimeType === mimeType) {
+      sortedCodecs.push(codec);
+    } else {
+      otherCodecs.push(codec);
+    }
+  });
+
+  return sortedCodecs;//.concat(otherCodecs);
+}
+
+function changeCodec(peerConnection, audioMimeType, videoMimeType) {
+	logger.debug("codec change, audio : ", audioMimeType, ", video : ", videoMimeType);
+  const transceivers = peerConnection.getTransceivers();
+
+  transceivers.forEach(transceiver => {
+    const kind = transceiver.sender.track.kind;
+		let sendCodecs = RTCRtpSender.getCapabilities(kind).codecs;
+		let recvCodecs = RTCRtpReceiver.getCapabilities(kind).codecs;
+		
+    if (kind === "audio") {
+			sendCodecs = preferCodec(sendCodecs, audioMimeType);
+      recvCodecs = preferCodec(recvCodecs, audioMimeType);
+      transceiver.setCodecPreferences([...sendCodecs, ...recvCodecs]);
+		} else if(kind === 'video') {
+      sendCodecs = preferCodec(sendCodecs, videoMimeType);
+      recvCodecs = preferCodec(recvCodecs, videoMimeType);
+      transceiver.setCodecPreferences([...sendCodecs, ...recvCodecs]);
+		}
+  });
+
+  // peerConnection.onnegotiationneeded();
+}
+
 export default class Session extends React.Component
 {
 	constructor(props)
@@ -114,6 +152,7 @@ export default class Session extends React.Component
 		const localVideo = this.refs.localVideo;
 		const session = this.props.session;
 		const peerconnection = session.connection;
+		changeCodec(peerconnection, this.props.audioCodec, this.props.videoCodec);
 		const localStream = peerconnection.getLocalStreams()[0];
 		const remoteStream = peerconnection.getRemoteStreams()[0];
 
@@ -369,5 +408,7 @@ Session.propTypes =
 {
 	session            : PropTypes.object.isRequired,
 	onNotify           : PropTypes.func.isRequired,
-	onHideNotification : PropTypes.func.isRequired
+	onHideNotification : PropTypes.func.isRequired,
+	audioCodec				 : PropTypes.string.isRequired,
+	videoCodec				 : PropTypes.string.isRequired
 };

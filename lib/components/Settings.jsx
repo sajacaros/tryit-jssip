@@ -97,6 +97,33 @@ export default class Settings extends React.Component
 						</SelectField>
 					</div>
 
+					<div className='item'>
+						<SelectField
+							floatingLabelText='audio codec'
+							value={settings.audioCodec || 'audio/opus'}
+							fullWidth
+							onChange={this.handleChangeAudioCodec.bind(this)}
+						>
+							<MenuItem value='audio/opus' primaryText='OPUS'/>
+							<MenuItem value='audio/PCMU' primaryText='PCMU'/>
+							<MenuItem value='audio/PCMA' primaryText='PCMA'/>
+							<MenuItem value='audio/G722' primaryText='G722'/>
+						</SelectField>
+					</div>
+
+					<div className='item'>
+						<SelectField
+							floatingLabelText='video codec'
+							value={settings.videoCodec || 'video/H264'}
+							fullWidth
+							onChange={this.handleChangeVideoCodec.bind(this)}
+						>
+							<MenuItem value='video/H264' primaryText='H264'/>
+							<MenuItem value='video/V8' primaryText='V8'/>
+							<MenuItem value='video/V9' primaryText='V9'/>
+						</SelectField>
+					</div>
+
 					{/* <div className='item'>
 						<TextField
 							floatingLabelText='Registrar server'
@@ -261,11 +288,28 @@ export default class Settings extends React.Component
 		this.setState({ settings });
 	}
 
+
 	handleChangeResolution(event, key, value) 
 	{
 		const settings = this.state.settings;
 
 		settings.resolution = value;
+		this.setState({ settings });
+	}
+
+	handleChangeAudioCodec(event, key, value) 
+	{
+		const settings = this.state.settings;
+
+		settings.audioCodec = value;
+		this.setState({ settings });
+	}
+
+	handleChangeVideoCodec(event, key, value) 
+	{
+		const settings = this.state.settings;
+
+		settings.videoCodec = value;
 		this.setState({ settings });
 	}
 
