@@ -154,11 +154,12 @@ export default class Session extends React.Component
 		const localStream = peerconnection.getLocalStreams()[0];
 		const remoteStream = peerconnection.getRemoteStreams()[0];
 
+		changeCodec(session.connection, this.props.audioCodec, this.props.videoCodec);
+		logger.debug('session : ', session);
+
 		// Handle local stream
 		if (localStream)
 		{
-
-			// changeCodec(session.connection, this.props.audioCodec, this.props.videoCodec);
 			// Clone local stream
 			this._localClonedStream = localStream.clone();
 

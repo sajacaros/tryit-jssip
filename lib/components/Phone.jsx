@@ -391,10 +391,12 @@ export default class Phone extends React.Component
 			});
 
 			session.on('sdp',sdpLog);
-			session.on('peerconnection', ({peerconnection})=>{
-				logger.debug('remote peerconnection??, ', peerconnection);
-				// changeCodec(peerconnection, settings.audioCodec, settings.videoCodec);
-			});
+			// session.on('peerconnection', ({peerconnection})=>{
+			// 	logger.debug('remote peerconnection??, ', peerconnection);
+			// 	changeCodec(peerconnection, settings.audioCodec, settings.videoCodec);
+			// });
+
+			logger.debug(', ', session.re);
 		});
 
 		this._ua.start();
