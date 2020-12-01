@@ -158,7 +158,7 @@ export default class Session extends React.Component
 		if (localStream)
 		{
 
-			changeCodec(session.connection, this.props.audioCodec, this.props.videoCodec);
+			// changeCodec(session.connection, this.props.audioCodec, this.props.videoCodec);
 			// Clone local stream
 			this._localClonedStream = localStream.clone();
 

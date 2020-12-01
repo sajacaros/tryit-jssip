@@ -392,7 +392,8 @@ export default class Phone extends React.Component
 
 			session.on('sdp',sdpLog);
 			session.on('peerconnection', ({peerconnection})=>{
-				changeCodec(peerconnection, settings.audioCodec, settings.videoCodec);
+				logger.debug('remote peerconnection??, ', peerconnection);
+				// changeCodec(peerconnection, settings.audioCodec, settings.videoCodec);
 			});
 		});
 
@@ -457,8 +458,6 @@ export default class Phone extends React.Component
 				mediaConstraints :
 				{
 					audio : true,
-					// video : true
-					// video: {width: {exact: 1280}, height: {exact: 1080}}
 					video: videoConstraints,
 				},
 				rtcOfferConstraints :
@@ -467,8 +466,6 @@ export default class Phone extends React.Component
 					offerToReceiveVideo : 1
 				}
 			});
-
-		// changeCodec(session.connection, this.props.settings.audioCodec, this.props.settings.videoCodec);
 
 		session.on('connecting', () =>
 		{
@@ -516,7 +513,6 @@ export default class Phone extends React.Component
 
 		const session = this.state.incomingSession;
 		const videoConstraints = defineResolution(this.props.settings.resolution);
-		changeCodec(session.connection, this.props.settings.audioCodec, this.props.settings.videoCodec);
 
 		session.answer(
 			{
