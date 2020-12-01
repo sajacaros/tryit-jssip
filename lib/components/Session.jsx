@@ -26,20 +26,23 @@ function preferCodec(codecs, mimeType) {
 
 function changeCodec(peerConnection, audioMimeType, videoMimeType) {
 	logger.debug("codec change, audio : ", audioMimeType, ", video : ", videoMimeType);
-  const transceivers = peerConnection.getTransceivers();
+	const transceivers = peerConnection.getTransceivers();
+	
 
   transceivers.forEach(transceiver => {
     const kind = transceiver.sender.track.kind;
 		let sendCodecs = RTCRtpSender.getCapabilities(kind).codecs;
 		let recvCodecs = RTCRtpReceiver.getCapabilities(kind).codecs;
+
+
 		
     if (kind === "audio") {
 			sendCodecs = preferCodec(sendCodecs, audioMimeType);
-      recvCodecs = preferCodec(recvCodecs, audioMimeType);
+      // recvCodecs = preferCodec(recvCodecs, audioMimeType);
       transceiver.setCodecPreferences([...sendCodecs, ...recvCodecs]);
 		} else if(kind === 'video') {
       sendCodecs = preferCodec(sendCodecs, videoMimeType);
-      recvCodecs = preferCodec(recvCodecs, videoMimeType);
+      // recvCodecs = preferCodec(recvCodecs, videoMimeType);
       transceiver.setCodecPreferences([...sendCodecs, ...recvCodecs]);
 		}
   });
