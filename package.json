@@ -22,6 +22,7 @@
     "react-copy-to-clipboard": "^5.0.2",
     "react-dom": "^16.13.1",
     "react-notification-system": "^0.2.17",
+    "sdp-transform": "^2.14.0",
     "url-parse": "^1.4.7"
   },
   "devDependencies": {
