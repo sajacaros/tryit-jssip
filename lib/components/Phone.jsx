@@ -74,14 +74,12 @@ function defineResolution(wantedResolution) {
 }
 
 function preferCodec(rtpList, codecName) {
-	logger.debug(`rtpList : ${rtpList}, codeName : ${codecName}`);
 	return rtpList.filter(rtp => rtp.codec===codecName);
 }
 
 
 function transformSdp(sdp, {audioCodec, videoCodec}) {
 	for( const media of sdp.media ){
-		logger.debug('media : ', media);
 		let rtpCodecs = media.rtp;
 		if(media.type === 'audio') {
 			rtpCodecs = preferCodec(media.rtp, audioCodec);
