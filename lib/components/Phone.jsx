@@ -92,7 +92,7 @@ function transformSdp(sdp, {audioCodec, videoCodec}) {
 		media.payloads = rtpIndexes.join(' ');
 		media.fmtp = media.fmtp.filter(m=>rtpIndexes.includes(m.payload));
 		media.rtcpFb = media.fmtp.filter(m=>rtpIndexes.includes(m.payload));
-		media.protocol = 'RTP/AVP'
+		// media.protocol = 'RTP/AVP'
 	}
 }
 
