@@ -443,7 +443,7 @@ export default class Phone extends React.Component
 
 		const videoConstraints = defineResolution(this.props.settings.resolution);
 		logger.debug('selected resolution : ', videoConstraints);
-		videoConstraints.frameRate = {min: "5", max:"30"};
+		videoConstraints.frameRate = {min: this.props.settings.framerateMin, max:this.props.settings.framerateMax};
 
 		const session = this._ua.call(uri,
 			{
