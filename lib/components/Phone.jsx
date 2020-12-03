@@ -73,41 +73,24 @@ function defineResolution(wantedResolution) {
 	return videoConstraints;
 }
 
-function preferCodec(codecs, mimeType) {
-  let otherCodecs = [];
-  let sortedCodecs = [];
-
-  codecs.forEach(codec => {
-    if (codec.mimeType === mimeType) {
-      sortedCodecs.push(codec);
-    } else {
-      otherCodecs.push(codec);
-    }
-  });
-
-  return sortedCodecs;//.concat(otherCodecs);
+function preferCodec(rtpList, codecName) {
+	return rtpList.filter(rtp => rtp.codec===codecName);
 }
 
-function changeCodec(peerConnection, audioMimeType, videoMimeType) {
-	logger.debug("codec change, audio : ", audioMimeType, ", video : ", videoMimeType);
-	const transceivers = peerConnection.getTransceivers();
-	
 
-  transceivers.forEach(transceiver => {
-    const kind = transceiver.sender.track.kind;
-		let sendCodecs = RTCRtpSender.getCapabilities(kind).codecs;
-		let recvCodecs = RTCRtpReceiver.getCapabilities(kind).codecs;
-		
-    if (kind === "audio") {
-			sendCodecs = preferCodec(sendCodecs, audioMimeType);
-      recvCodecs = preferCodec(recvCodecs, audioMimeType);
-      transceiver.setCodecPreferences([...sendCodecs, ...recvCodecs]);
-		} else if(kind === 'video') {
-      sendCodecs = preferCodec(sendCodecs, videoMimeType);
-      recvCodecs = preferCodec(recvCodecs, videoMimeType);
-      transceiver.setCodecPreferences([...sendCodecs, ...recvCodecs]);
+function transformSdp(sdp, {audioCodec, videoCodec}) {
+	for( const idx in sdp.media ){
+		let rtpCodecs = sdp.media[idx].rtp;
+		if(sdp.media[idx].type === 'audio') {
+			rtpCodecs = preferCodec(sdp.media[idx].rtp, audioCodec);
+		} else if(sdp.media[idx].type === 'video') {
+			rtpCodecs = preferCodec(sdp.media[idx].rtp, videoCodec);
 		}
-  });
+
+		sdp.media[idx].rtp = rtpCodecs;
+		logger.debug('media payloads : ', sdp.media[idx].payloads);
+		sdp.media[idx].payloads = rtpCodecs.map(rtp=>rtp.payload).join(' ');
+	}
 }
 
 export default class Phone extends React.Component
@@ -393,47 +376,12 @@ export default class Phone extends React.Component
 			});
 
 			session.on('sdp', (data)=> {
-				const parsedSDP = sdpTransform.parse(data.sdp);
-				logger.debug('parsedSDP : ', parsedSDP);
-				// data.sdp =
-				// 'v=0'+'\r\n'+
-				// 'o=- 3550523354316519672 2 IN IP4 127.0.0.1'+'\r\n'+
-				// 's=-'+'\r\n'+
-				// 't=0 0'+'\r\n'+
-				// 'a=group:BUNDLE 0 1'+'\r\n'+
-				// 'a=msid-semantic: WMS RfqnxXYHN8c3PUVHy43HVVenSrEghp2jRvXT'+'\r\n'+
-				// 'm=audio 55890 UDP/TLS/RTP/SAVPF 111'+'\r\n'+
-				// 'c=IN IP4 192.168.40.55'+'\r\n'+
-				// 'a=candidate:3239734947 1 udp 2122260223 192.168.40.55 55890 typ host generation 0 network-id 1 network-cost 10'+'\r\n'+
-				// 'a=ice-ufrag:6b6D'+'\r\n'+
-				// 'a=ice-pwd:2XVRbJy9tOQ5wYNX6cvBmVhq'+'\r\n'+
-				// 'a=ice-options:trickle'+'\r\n'+
-				// 'a=fingerprint:sha-256 D3:D2:52:E3:B4:19:40:51:C6:D1:ED:3E:20:D6:6C:69:E2:7D:B6:F7:77:C8:3F:E8:A4:9D:57:74:DA:17:0C:1E'+'\r\n'+
-				// 'a=setup:active'+'\r\n'+
-				// 'a=mid:0'+'\r\n'+
-				// 'a=sendrecv'+'\r\n'+
-				// 'a=msid:RfqnxXYHN8c3PUVHy43HVVenSrEghp2jRvXT f696519c-8803-4344-a173-e600bcb36507'+'\r\n'+
-				// 'a=rtpmap:111 opus/48000/2'+'\r\n'+
-				// 'a=rtcp-fb:111 transport-cc'+'\r\n'+
-				// 'a=fmtp:111 minptime=10;useinbandfec=1'+'\r\n'+
-				// 'm=video 9 RTP/AVP 102'+'\r\n'+
-				// 'c=IN IP4 0.0.0.0'+'\r\n'+
-				// 'a=ice-ufrag:6b6D'+'\r\n'+
-				// 'a=ice-pwd:2XVRbJy9tOQ5wYNX6cvBmVhq'+'\r\n'+
-				// 'a=ice-options:trickle'+'\r\n'+
-				// 'a=fingerprint:sha-256 D3:D2:52:E3:B4:19:40:51:C6:D1:ED:3E:20:D6:6C:69:E2:7D:B6:F7:77:C8:3F:E8:A4:9D:57:74:DA:17:0C:1E'+'\r\n'+
-				// 'a=setup:active'+'\r\n'+
-				// 'a=mid:1'+'\r\n'+
-				// 'a=sendrecv'+'\r\n'+
-				// 'a=msid:RfqnxXYHN8c3PUVHy43HVVenSrEghp2jRvXT b574ba2f-aab5-46f5-9a41-09b8ab631b1d'+'\r\n'+
-				// 'a=rtpmap:102 H264/90000'+'\r\n'+
-				// 'a=rtcp-fb:102 goog-remb'+'\r\n'+
-				// 'a=rtcp-fb:102 transport-cc'+'\r\n'+
-				// 'a=rtcp-fb:102 ccm fir'+'\r\n'+
-				// 'a=rtcp-fb:102 nack'+'\r\n'+
-				// 'a=rtcp-fb:102 nack pli'+'\r\n'+
-				// 'a=fmtp:102 level-asymmetry-allowed=1;packetization-mode=1;profile-level-id=42001f'
-				// ;
+				sdpLog(data)
+				const parsedSdp = sdpTransform.parse(data.sdp);
+				// logger.debug("parse sdp : ", parsedSdp);
+				transformSdp(parsedSdp, this.props.settings);
+				data.sdp = sdpTransform.write(parsedSdp);
+				logger.debug("tranformed sdp : ", data.sdp)
 			});
 		});
 
@@ -544,8 +492,12 @@ export default class Phone extends React.Component
 		});
 
 		session.on('sdp', (data)=> {
-			const parsedSDP = sdpTransform.parse(data.sdp);
-			logger.debug('parsedSDP : ', parsedSDP);
+			sdpLog(data);
+			const parsedSdp = sdpTransform.parse(data.sdp);
+			// logger.debug("parse sdp : ", parsedSdp);
+			transformSdp(parsedSdp, this.props.settings);
+			data.sdp = sdpTransform.write(parsedSdp);
+			logger.debug("tranformed sdp : ", data.sdp)
 		});
 	}
 

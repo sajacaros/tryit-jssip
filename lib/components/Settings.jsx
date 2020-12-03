@@ -100,27 +100,27 @@ export default class Settings extends React.Component
 					<div className='item'>
 						<SelectField
 							floatingLabelText='audio codec'
-							value={settings.audioCodec || 'audio/opus'}
+							value={settings.audioCodec || 'opus'}
 							fullWidth
 							onChange={this.handleChangeAudioCodec.bind(this)}
 						>
-							<MenuItem value='audio/opus' primaryText='OPUS'/>
-							<MenuItem value='audio/PCMU' primaryText='PCMU'/>
-							<MenuItem value='audio/PCMA' primaryText='PCMA'/>
-							<MenuItem value='audio/G722' primaryText='G722'/>
+							<MenuItem value='opus' primaryText='OPUS'/>
+							<MenuItem value='PCMU' primaryText='PCMU'/>
+							<MenuItem value='PCMA' primaryText='PCMA'/>
+							<MenuItem value='G722' primaryText='G722'/>
 						</SelectField>
 					</div>
 
 					<div className='item'>
 						<SelectField
 							floatingLabelText='video codec'
-							value={settings.videoCodec || 'video/H264'}
+							value={settings.videoCodec || 'H264'}
 							fullWidth
 							onChange={this.handleChangeVideoCodec.bind(this)}
 						>
-							<MenuItem value='video/H264' primaryText='H264'/>
-							<MenuItem value='video/VP8' primaryText='VP8'/>
-							<MenuItem value='video/VP9' primaryText='VP9'/>
+							<MenuItem value='H264' primaryText='H264'/>
+							<MenuItem value='VP8' primaryText='VP8'/>
+							<MenuItem value='VP9' primaryText='VP9'/>
 						</SelectField>
 					</div>
 

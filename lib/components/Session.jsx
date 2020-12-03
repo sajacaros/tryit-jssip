@@ -363,50 +363,11 @@ export default class Session extends React.Component
 
 		this.setState({ remoteHasVideo: Boolean(videoTrack) });
 	}
-
-	preferCodec(codecs, mimeType) {
-		let otherCodecs = [];
-		let sortedCodecs = [];
-	
-		codecs.forEach(codec => {
-			if (codec.mimeType === mimeType) {
-				sortedCodecs.push(codec);
-			} else {
-				otherCodecs.push(codec);
-			}
-		});
-	
-		return sortedCodecs;//.concat(otherCodecs);
-	}
-	
-	changeCodec(peerConnection, audioMimeType, videoMimeType) {
-		logger.debug("codec change, audio : ", audioMimeType, ", video : ", videoMimeType);
-		const transceivers = peerConnection.getTransceivers();
-		
-	
-		transceivers.forEach(transceiver => {
-			const kind = transceiver.sender.track.kind;
-			let sendCodecs = RTCRtpSender.getCapabilities(kind).codecs;
-			let recvCodecs = RTCRtpReceiver.getCapabilities(kind).codecs;
-			
-			if (kind === "audio") {
-				sendCodecs = this.preferCodec(sendCodecs, audioMimeType);
-				recvCodecs = preferCodec(recvCodecs, audioMimeType);
-				transceiver.setCodecPreferences([...sendCodecs, ...recvCodecs]);
-			} else if(kind === 'video') {
-				sendCodecs = this.preferCodec(sendCodecs, videoMimeType);
-				recvCodecs = preferCodec(recvCodecs, videoMimeType);
-				transceiver.setCodecPreferences([...sendCodecs, ...recvCodecs]);
-			}
-		});
-	}
 }
 
 Session.propTypes =
 {
 	session            : PropTypes.object.isRequired,
 	onNotify           : PropTypes.func.isRequired,
-	onHideNotification : PropTypes.func.isRequired,
-	audioCodec : PropTypes.string.isRequired,
-	videoCodec : PropTypes.string.isRequired,
+	onHideNotification : PropTypes.func.isRequired
 };
