@@ -9,6 +9,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import clone from 'clone';
 import Logger from '../Logger';
 import TransitionAppear from './TransitionAppear';
+import Slider from 'material-ui/Slider';
 
 const logger = new Logger('Settings');
 
@@ -123,7 +124,27 @@ export default class Settings extends React.Component
 							<MenuItem value='VP9' primaryText='VP9'/>
 						</SelectField>
 					</div>
-
+					<div className='item'>
+						<label>framerate: </label>
+						<span>{settings.framerateMin || 10}</span>
+						<span>~</span>
+						<span>{settings.framerateMax || 30}</span>
+						<Slider
+							value={settings.framerateMin || 10}
+							onChange={this.handleChangeFramerateMin.bind(this)}
+							min={10}
+							max={60}
+							step={5}
+						/>
+						<Slider
+							value={settings.framerateMax || 30}
+							onChange={this.handleChangeFramerateMax.bind(this)}
+							min={10}
+							max={60}
+							step={5}
+						/>
+					</div>
+				
 					<div className='separator'/>
 
 					<List>
@@ -220,6 +241,28 @@ export default class Settings extends React.Component
 		const settings = this.state.settings;
 
 		settings.audioCodec = value;
+		this.setState({ settings });
+	}
+
+	handleChangeFramerateMin(event, value)
+	{
+		const settings = this.state.settings;
+		if(settings.framerateMax <= value ) {
+			settings.framerateMax = value
+		} 
+		settings.framerateMin = value;
+		
+		this.setState({ settings });
+	}
+
+	handleChangeFramerateMax(event, value)
+	{
+		const settings = this.state.settings;
+		if(value <= settings.framerateMin ) {
+			settings.framerateMin = value;
+		} 
+		settings.framerateMax = value;
+		
 		this.setState({ settings });
 	}
 
