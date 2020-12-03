@@ -383,7 +383,7 @@ export default class Phone extends React.Component
 				const parsedSdp = sdpTransform.parse(data.sdp);
 				transformSdp(parsedSdp, this.props.settings);
 				data.sdp = sdpTransform.write(parsedSdp);
-				logger.debug("tranformed sdp : ", data.sdp);
+				logger.debug("386 tranformed sdp : ", data.sdp);
 			});
 		});
 
@@ -498,7 +498,7 @@ export default class Phone extends React.Component
 			const parsedSdp = sdpTransform.parse(data.sdp);
 			transformSdp(parsedSdp, this.props.settings);
 			data.sdp = sdpTransform.write(parsedSdp);
-			logger.debug("tranformed sdp : ", data.sdp);
+			logger.debug("501 tranformed sdp : ", data.sdp);
 		});
 	}
 
