@@ -74,22 +74,26 @@ function defineResolution(wantedResolution) {
 }
 
 function preferCodec(rtpList, codecName) {
+	logger.debug(`rtpList : ${rtpList}, codeName : ${codecName}`);
 	return rtpList.filter(rtp => rtp.codec===codecName);
 }
 
 
 function transformSdp(sdp, {audioCodec, videoCodec}) {
-	for( const idx in sdp.media ){
-		let rtpCodecs = sdp.media[idx].rtp;
-		if(sdp.media[idx].type === 'audio') {
-			rtpCodecs = preferCodec(sdp.media[idx].rtp, audioCodec);
-		} else if(sdp.media[idx].type === 'video') {
-			rtpCodecs = preferCodec(sdp.media[idx].rtp, videoCodec);
+	for( const media of sdp.media ){
+		logger.debug('media : ', media);
+		let rtpCodecs = media.rtp;
+		if(media.type === 'audio') {
+			rtpCodecs = preferCodec(media.rtp, audioCodec);
+		} else if(media.type === 'video') {
+			rtpCodecs = preferCodec(media.rtp, videoCodec);
 		}
 
-		sdp.media[idx].rtp = rtpCodecs;
-		logger.debug('media payloads : ', sdp.media[idx].payloads);
-		sdp.media[idx].payloads = rtpCodecs.map(rtp=>rtp.payload).join(' ');
+		media.rtp = rtpCodecs;
+		let rtpIndexes = rtpCodecs.map(rtp=>rtp.payload);
+		media.payloads = rtpIndexes.join(' ');
+		media.fmtp = media.fmtp.filter(m=>rtpIndexes.includes(m.payload));
+		media.rtcpFb = media.fmtp.filter(m=>rtpIndexes.includes(m.payload));
 	}
 }
 
@@ -376,12 +380,10 @@ export default class Phone extends React.Component
 			});
 
 			session.on('sdp', (data)=> {
-				sdpLog(data)
 				const parsedSdp = sdpTransform.parse(data.sdp);
-				// logger.debug("parse sdp : ", parsedSdp);
 				transformSdp(parsedSdp, this.props.settings);
 				data.sdp = sdpTransform.write(parsedSdp);
-				logger.debug("tranformed sdp : ", data.sdp)
+				logger.debug("tranformed sdp : ", data.sdp);
 			});
 		});
 
@@ -492,12 +494,10 @@ export default class Phone extends React.Component
 		});
 
 		session.on('sdp', (data)=> {
-			sdpLog(data);
 			const parsedSdp = sdpTransform.parse(data.sdp);
-			// logger.debug("parse sdp : ", parsedSdp);
-			transformSdp(parsedSdp, this.props.settings);
-			data.sdp = sdpTransform.write(parsedSdp);
-			logger.debug("tranformed sdp : ", data.sdp)
+				transformSdp(parsedSdp, this.props.settings);
+				data.sdp = sdpTransform.write(parsedSdp);
+				logger.debug("tranformed sdp : ", data.sdp);
 		});
 	}
 
