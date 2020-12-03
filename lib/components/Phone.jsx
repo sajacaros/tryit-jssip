@@ -90,7 +90,7 @@ function transformSdp(sdp, {audioCodec, videoCodec}) {
 		media.rtp = rtpCodecs;
 		let rtpIndexes = rtpCodecs.map(rtp=>rtp.payload);
 		media.payloads = rtpIndexes.join(' ');
-		media.fmtp = media.fmtp.filter(m=>logger.debug("fmtp touch, fmtp : ", m));
+		media.fmtp = media.fmtp.filter(m=>rtpIndexes.includes(m.payload));
 		media.rtcpFb = media.rtcpFb.filter(m=>rtpIndexes.includes(m.payload));
 		// media.protocol = 'RTP/AVP'
 	}
