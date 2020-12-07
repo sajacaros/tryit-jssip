@@ -172,7 +172,7 @@ export default class Session extends React.Component
 			if (!this._mounted)
 				return;
 
-			logger.debug('session "accepted" event [data:%o]', data, session.direction);
+			logger.debug('session "accepted" event [data:%o]', data);
 
 			if (session.direction === 'outgoing')
 			{
@@ -266,7 +266,18 @@ export default class Session extends React.Component
 
 		peerconnection.addEventListener('track', (event) =>
 		{
+			logger.debug('peerconnection : ', peerconnection);
 			logger.debug('peerconnection "track" event, event : ', event);
+			const sender = peerconnection.getSenders()[0];
+			logger.debug('sender : ', sender);
+			const parameters = sender.getParameters();
+			if (!parameters.encodings) {
+				parameters.encodings = [{}];
+			}
+			parameters.encodings[0].maxBitrate = this.bandwidth * 1000;
+			sender.setParameters(parameters)
+				.then(()=>logger.debug('bandwidth setting complete'))
+				.catch(e=>console.error(e));
 
 			if (!this._mounted)
 			{
