@@ -172,7 +172,7 @@ export default class Session extends React.Component
 			if (!this._mounted)
 				return;
 
-			logger.debug('session "accepted" event [data:%o]', data);
+			logger.debug('session "accepted" event [data:%o]', data, session.direction);
 
 			if (session.direction === 'outgoing')
 			{
@@ -185,17 +185,7 @@ export default class Session extends React.Component
 
 			this.setState({ canHold: true, ringing: false });
 
-			// const sender = peerconnection.getSenders()[0];
-			// logger.debug('peerconnection : ', peerconnection);
-			// logger.debug('sender : ', sender);
-			// const parameters = sender.getParameters();
-			// if (!parameters.encodings) {
-			// 	parameters.encodings = [{}];
-			// }
-			// parameters.encodings[0].maxBitrate = this.bandwidth * 1000;
-			// sender.setParameters(parameters)
-			// 	.then(()=>logger.debug('bandwidth setting complete'))
-			// 	.catch(e=>console.error(e));
+
 		});
 
 		session.on('failed', (data) =>
@@ -274,9 +264,9 @@ export default class Session extends React.Component
 			}
 		});
 
-		peerconnection.addEventListener('addstream', (event) =>
+		peerconnection.addEventListener('track', (event) =>
 		{
-			logger.debug('peerconnection "addstream" event');
+			logger.debug('peerconnection "track" event, event : ', event);
 
 			if (!this._mounted)
 			{
@@ -285,7 +275,7 @@ export default class Session extends React.Component
 				return;
 			}
 
-			this._handleRemoteStream(event.stream);
+			this._handleRemoteStream(event.streams[0]);
 		});
 	}
 

@@ -18,7 +18,7 @@ import * as sdpTransform from 'sdp-transform';
 
 // TODO: For testing.
 window.jssip = JsSIP;
-window.jssip.debug.enable('JsSIP:*');
+// window.jssip.debug.enable('JsSIP:*');
 window.jssip.debug.enable('tryit-jssip:*');
 // window.jssip.debug.enable('*');
 
@@ -28,9 +28,10 @@ const logger = new Logger('Phone');
 
 const sdpLog = ({originator,type,sdp}) =>
 {
-	logger.debug('sdp originator : ', originator);
-	logger.debug('sdp type : ', type);
-	logger.debug('sdp sdp : ', sdp);
+	logger.debug('sdp handler log');
+	// logger.debug('sdp originator : ', originator);
+	// logger.debug('sdp type : ', type);
+	// logger.debug('sdp sdp : ', sdp);
 };
 
 const qvgaConstraints = {width: {exact: 320}, height: {exact: 240}};
@@ -406,9 +407,10 @@ export default class Phone extends React.Component
 					const parsedSdp = sdpTransform.parse(data.sdp);
 					transformSdp(parsedSdp, this.props.settings);
 					data.sdp = sdpTransform.write(parsedSdp);
-					logger.debug("386 tranformed sdp : ", data.sdp);
+					// logger.debug("386 tranformed sdp : ", data.sdp);
 				}
 			});
+			session.on('peerconnection', e=> logger.debug('413 peerconnection : ', e));
 		});
 
 		this._ua.start();
@@ -483,6 +485,7 @@ export default class Phone extends React.Component
 		session.on('connecting', () =>
 		{
 			this.setState({ session });
+			
 		});
 
 		session.on('progress', () =>
@@ -522,9 +525,11 @@ export default class Phone extends React.Component
 				const parsedSdp = sdpTransform.parse(data.sdp);
 				transformSdp(parsedSdp, this.props.settings);
 				data.sdp = sdpTransform.write(parsedSdp);
-				logger.debug("501 tranformed sdp : ", data.sdp);
+				// logger.debug("501 tranformed sdp : ", data.sdp);
 			}
 		});
+
+		session.on('peerconnection', e=> logger.debug('532 peerconnection : ', e));
 	}
 
 	handleAnswerIncoming()
