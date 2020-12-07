@@ -86,13 +86,17 @@ function preferCodec(rtpList, codecName) {
 }
 
 
-function transformSdp(sdp, {audioCodec, videoCodec}) {
+function transformSdp(sdp, {audioCodec, videoCodec, bandwidth}) {
 	for( const media of sdp.media ){
 		let rtpCodecs = media.rtp;
 		if(media.type === 'audio') {
 			rtpCodecs = preferCodec(media.rtp, audioCodec);
 		} else if(media.type === 'video') {
 			rtpCodecs = preferCodec(media.rtp, videoCodec);
+			if( !media.bandwidth ) {
+				media.bandwidth = [];
+			}
+			media.bandwidth.push({type:"AS", limit: bandwidth});
 		}
 
 		media.rtp = rtpCodecs;
@@ -102,6 +106,8 @@ function transformSdp(sdp, {audioCodec, videoCodec}) {
 		media.rtcpFb = media.rtcpFb.filter(m=>rtpIndexes.includes(m.payload));
 		// media.protocol = 'RTP/AVP'
 	}
+	logger.debug('bandwidth : ', bandwidth);
+	logger.debug('sdp : ', sdp);
 }
 
 function defineVideoConstraints({resolution, framerateMin, framerateMax}) {
@@ -195,8 +201,7 @@ export default class Phone extends React.Component
 								session={state.session}
 								onNotify={props.onNotify}
 								onHideNotification={props.onHideNotification}
-								audioCodec={props.settings.audioCodec}
-								videoCodec={props.settings.videoCodec}
+								bandwidth={props.settings.bandwidth}
 							/>
 						</If>
 
@@ -398,6 +403,7 @@ export default class Phone extends React.Component
 			session.on('sdp', (data)=> {
 				sdpLog(data);
 				if(data.originator==='local') {
+					data.sdp = data.sdp + 'b=AS:6000'
 					const parsedSdp = sdpTransform.parse(data.sdp);
 					transformSdp(parsedSdp, this.props.settings);
 					data.sdp = sdpTransform.write(parsedSdp);

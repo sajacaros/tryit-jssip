@@ -116,6 +116,7 @@ export default class Session extends React.Component
 		const peerconnection = session.connection;
 		const localStream = peerconnection.getLocalStreams()[0];
 		const remoteStream = peerconnection.getRemoteStreams()[0];		
+		const bandwidth = parseInt(this.props.bandwidth);
 
 		// Handle local stream
 		if (localStream)
@@ -183,6 +184,18 @@ export default class Session extends React.Component
 			}
 
 			this.setState({ canHold: true, ringing: false });
+
+			const sender = peerconnection.getSenders()[0];
+			logger.debug('peerconnection : ', peerconnection);
+			logger.debug('sender : ', sender);
+			const parameters = sender.getParameters();
+			if (!parameters.encodings) {
+				parameters.encodings = [{}];
+			}
+			parameters.encodings[0].maxBitrate = this.bandwidth * 1000;
+			sender.setParameters(parameters)
+				.then(()=>logger.debug('bandwidth setting complete'))
+				.catch(e=>console.error(e));
 		});
 
 		session.on('failed', (data) =>
@@ -369,5 +382,6 @@ Session.propTypes =
 {
 	session            : PropTypes.object.isRequired,
 	onNotify           : PropTypes.func.isRequired,
-	onHideNotification : PropTypes.func.isRequired
+	onHideNotification : PropTypes.func.isRequired,
+	bandwidth					 : PropTypes.string.isRequired
 };

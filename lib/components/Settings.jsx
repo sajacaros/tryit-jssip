@@ -125,6 +125,22 @@ export default class Settings extends React.Component
 						</SelectField>
 					</div>
 					<div className='item'>
+					<SelectField
+							floatingLabelText='bandwidth'
+							value={settings.bandwidth || '1024'}
+							fullWidth
+							onChange={this.handleChangeBandwidth.bind(this)}
+						>
+							<MenuItem value='128' primaryText='128 kbps'/>
+							<MenuItem value='256' primaryText='256 kbps'/>
+							<MenuItem value='512' primaryText='512 kbps'/>
+							<MenuItem value='768' primaryText='768 kbps'/>
+							<MenuItem value='1024' primaryText='1024 kbps'/>
+							<MenuItem value='2048' primaryText='2048 kbps'/>
+							<MenuItem value='4096' primaryText='4096 kbps'/>
+						</SelectField>
+					</div>
+					<div className='item'>
 						<label>framerate: </label>
 						<span>{settings.framerateMin}</span>
 						<span>~</span>
@@ -236,6 +252,8 @@ export default class Settings extends React.Component
 		this.setState({ settings });
 	}
 
+
+
 	handleChangeAudioCodec(event, key, value) 
 	{
 		const settings = this.state.settings;
@@ -252,6 +270,14 @@ export default class Settings extends React.Component
 		} 
 		settings.framerateMin = value;
 		
+		this.setState({ settings });
+	}
+
+	handleChangeBandwidth(event, key, value) 
+	{
+		const settings = this.state.settings;
+
+		settings.bandwidth = value;
 		this.setState({ settings });
 	}
 
