@@ -132,14 +132,14 @@ export default class Settings extends React.Component
 						<Slider
 							value={settings.framerateMin || 10}
 							onChange={this.handleChangeFramerateMin.bind(this)}
-							min={10}
+							min={1}
 							max={60}
 							step={5}
 						/>
 						<Slider
 							value={settings.framerateMax || 30}
 							onChange={this.handleChangeFramerateMax.bind(this)}
-							min={10}
+							min={1}
 							max={60}
 							step={5}
 						/>
