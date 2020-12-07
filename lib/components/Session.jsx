@@ -185,17 +185,17 @@ export default class Session extends React.Component
 
 			this.setState({ canHold: true, ringing: false });
 
-			const sender = peerconnection.getSenders()[0];
-			logger.debug('peerconnection : ', peerconnection);
-			logger.debug('sender : ', sender);
-			const parameters = sender.getParameters();
-			if (!parameters.encodings) {
-				parameters.encodings = [{}];
-			}
-			parameters.encodings[0].maxBitrate = this.bandwidth * 1000;
-			sender.setParameters(parameters)
-				.then(()=>logger.debug('bandwidth setting complete'))
-				.catch(e=>console.error(e));
+			// const sender = peerconnection.getSenders()[0];
+			// logger.debug('peerconnection : ', peerconnection);
+			// logger.debug('sender : ', sender);
+			// const parameters = sender.getParameters();
+			// if (!parameters.encodings) {
+			// 	parameters.encodings = [{}];
+			// }
+			// parameters.encodings[0].maxBitrate = this.bandwidth * 1000;
+			// sender.setParameters(parameters)
+			// 	.then(()=>logger.debug('bandwidth setting complete'))
+			// 	.catch(e=>console.error(e));
 		});
 
 		session.on('failed', (data) =>

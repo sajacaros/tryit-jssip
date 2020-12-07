@@ -403,7 +403,6 @@ export default class Phone extends React.Component
 			session.on('sdp', (data)=> {
 				sdpLog(data);
 				if(data.originator==='local') {
-					data.sdp = data.sdp + 'b=AS:6000'
 					const parsedSdp = sdpTransform.parse(data.sdp);
 					transformSdp(parsedSdp, this.props.settings);
 					data.sdp = sdpTransform.write(parsedSdp);
