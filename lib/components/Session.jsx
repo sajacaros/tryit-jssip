@@ -274,9 +274,9 @@ export default class Session extends React.Component
 			if (!parameters.encodings) {
 				parameters.encodings = [{}];
 			}
-			parameters.encodings[0].maxBitrate = this.bandwidth * 1000;
+			parameters.encodings[0].maxBitrate = bandwidth * 1000;
 			sender.setParameters(parameters)
-				.then(()=>logger.debug('bandwidth setting complete'))
+				.then(()=>logger.debug('bandwidth setting complete, bandwidth : ', bandwidth * 1000))
 				.catch(e=>console.error(e));
 
 			if (!this._mounted)
