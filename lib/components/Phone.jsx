@@ -94,10 +94,10 @@ function transformSdp(sdp, {audioCodec, videoCodec, bandwidth}) {
 			rtpCodecs = preferCodec(media.rtp, audioCodec);
 		} else if(media.type === 'video') {
 			rtpCodecs = preferCodec(media.rtp, videoCodec);
-			if( !media.bandwidth ) {
-				media.bandwidth = [];
-			}
-			media.bandwidth.push({type:"AS", limit: bandwidth});
+			// if( !media.bandwidth ) {
+			// 	media.bandwidth = [];
+			// }
+			// media.bandwidth.push({type:"AS", limit: bandwidth});
 		}
 
 		media.rtp = rtpCodecs;
@@ -115,8 +115,8 @@ function defineVideoConstraints({resolution, framerateMin, framerateMax}) {
 	let videoConstraints = {}
 	videoConstraints = defineResolution(videoConstraints, resolution);
 	logger.debug('resolution : ', videoConstraints);
-	// videoConstraints = defineFramerate(videoConstraints, framerateMin, framerateMax);
-	// logger.debug('framerate : ', videoConstraints);
+	videoConstraints = defineFramerate(videoConstraints, framerateMin, framerateMax);
+	logger.debug('framerate : ', videoConstraints);
 	return videoConstraints;
 }
 
