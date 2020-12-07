@@ -93,6 +93,15 @@ function transformSdp(sdp, {audioCodec, videoCodec}) {
 	}
 }
 
+function defineVideoConstraints({resolution, framerateMin, framerateMax}) {
+	let videoConstraints = {}
+	videoConstraints = defineResolution(videoConstraints, resolution);
+	logger.debug('resolution : ', videoConstraints);
+	videoConstraints = defineFramerate(videoConstraints, framerateMin, framerateMax);
+	logger.debug('framerate : ', videoConstraints);
+	return videoConstraints;
+}
+
 export default class Phone extends React.Component
 {
 	constructor(props)
@@ -438,11 +447,7 @@ export default class Phone extends React.Component
 	{
 		logger.debug('handleOutgoingCall() [uri:"%s"]', uri);
 
-		let videoConstraints = {}
-		videoConstraints = defineResolution(videoConstraints, this.props.settings.resolution);
-		logger.debug('resolution : ', videoConstraints);
-		videoConstraints = defineFramerate(videoConstraints, this.props.settings.framerateMin, this.props.settings.framerateMax);
-		logger.debug('framerate : ', videoConstraints);
+		const videoConstraints = defineVideoConstraints(this.props.settings);
 
 		const session = this._ua.call(uri,
 			{
@@ -511,8 +516,8 @@ export default class Phone extends React.Component
 		logger.debug('handleAnswerIncoming()');
 
 		const session = this.state.incomingSession;
-		const videoConstraints = defineResolution(this.props.settings.resolution);
-	
+		const videoConstraints = defineVideoConstraints(this.props.settings);
+
 		session.answer(
 			{
 				pcConfig : this.props.settings.pcConfig || { iceServers: [] },
