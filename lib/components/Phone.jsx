@@ -66,8 +66,19 @@ function defineResolution(constraints, wantedResolution) {
 }
 
 function defineFramerate(constraints, framerateMin, framerateMax) {
-	const framerate = {frameRate : {min: framerateMin, max: framerateMax} }
-	return {...constraints, ...framerate};
+	const minMax = {}
+	if(framerateMin != 0) {
+		minMax.min = framerateMin;
+	}
+	if(framerateMax != 0) {
+		minMax.max = framerateMax;
+	}
+
+	if( Object.keys(minMax).length === 0 && minMax.constructor === Object) {
+		return {...constraints}
+	} else {
+		return {...constraints, frameRate: minMax}
+	}
 }
 
 function preferCodec(rtpList, codecName) {

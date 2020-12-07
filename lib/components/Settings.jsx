@@ -126,20 +126,20 @@ export default class Settings extends React.Component
 					</div>
 					<div className='item'>
 						<label>framerate: </label>
-						<span>{settings.framerateMin || 10}</span>
+						<span>{settings.framerateMin}</span>
 						<span>~</span>
-						<span>{settings.framerateMax || 30}</span>
+						<span>{settings.framerateMax}</span>
 						<Slider
-							value={settings.framerateMin || 10}
+							value={settings.framerateMin}
 							onChange={this.handleChangeFramerateMin.bind(this)}
-							min={1}
+							min={0}
 							max={60}
 							step={5}
 						/>
 						<Slider
-							value={settings.framerateMax || 30}
+							value={settings.framerateMax}
 							onChange={this.handleChangeFramerateMax.bind(this)}
-							min={1}
+							min={0}
 							max={60}
 							step={5}
 						/>
