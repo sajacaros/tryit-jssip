@@ -115,8 +115,8 @@ function defineVideoConstraints({resolution, framerateMin, framerateMax}) {
 	let videoConstraints = {}
 	videoConstraints = defineResolution(videoConstraints, resolution);
 	logger.debug('resolution : ', videoConstraints);
-	videoConstraints = defineFramerate(videoConstraints, framerateMin, framerateMax);
-	logger.debug('framerate : ', videoConstraints);
+	// videoConstraints = defineFramerate(videoConstraints, framerateMin, framerateMax);
+	// logger.debug('framerate : ', videoConstraints);
 	return videoConstraints;
 }
 
