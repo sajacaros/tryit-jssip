@@ -45,32 +45,29 @@ const fourKConstraints = {width: {exact: 4096}, height: {exact: 2160}};
 
 const eightKConstraints = {width: {exact: 7680}, height: {exact: 4320}};
 
-function defineResolution(wantedResolution) {
+function defineResolution(constraints, wantedResolution) {
 	logger.debug('wanted resolution : ', wantedResolution);
-	let videoConstraints;
 	switch(wantedResolution) {
 		case 'QVGA': 
-			videoConstraints = qvgaConstraints;
-			break;
+			return {...constraints, ...qvgaConstraints};
 		case 'VGA': 
-			videoConstraints = vgaConstraints;
-			break;
+			return {...constraints, ...vgaConstraints};
 		case 'HD': 
-			videoConstraints = hdConstraints;
-			break;
+			return {...constraints, ...hdConstraints};
 		case 'FULLHD': 
-			videoConstraints = fullHdConstraints;
-			break;
+			return {...constraints, ...fullHdConstraints};
 		case 'FOURK': 
-			videoConstraints = fourKConstraints;
-			break;
+			return {...constraints, ...fourKConstraints};
 		case 'EIGHTK': 
-			videoConstraints = eightKConstraints;
-			break;
+			return {...constraints, ...eightKConstraints};
 		default:
-			videoConstraints = hdConstraints;
+			return {...constraints, ...hdConstraints};
 	}
-	return videoConstraints;
+}
+
+function defineFramerate(constraints, framerateMin, framerateMax) {
+	const framerate = {frameRate : {min: framerateMin, max: framerateMax} }
+	return {...constraints, ...framerate};
 }
 
 function preferCodec(rtpList, codecName) {
@@ -441,9 +438,11 @@ export default class Phone extends React.Component
 	{
 		logger.debug('handleOutgoingCall() [uri:"%s"]', uri);
 
-		const videoConstraints = defineResolution(this.props.settings.resolution);
-		logger.debug('selected resolution : ', videoConstraints);
-		videoConstraints.frameRate = {min: this.props.settings.framerateMin, max:this.props.settings.framerateMax};
+		let videoConstraints = {}
+		videoConstraints = defineResolution(videoConstraints, this.props.settings.resolution);
+		logger.debug('resolution : ', videoConstraints);
+		videoConstraints = defineFramerate(videoConstraints, this.props.settings.framerateMin, this.props.settings.framerateMax);
+		logger.debug('framerate : ', videoConstraints);
 
 		const session = this._ua.call(uri,
 			{
