@@ -13,6 +13,19 @@ import Slider from 'material-ui/Slider';
 
 const logger = new Logger('Settings');
 
+function groupingConnectedDevices(callback) {
+  navigator.mediaDevices.enumerateDevices()
+    .then(devices => {
+      const res = devices.reduce(
+        function (rv, x) {
+          (rv[x['kind']] = rv[x['kind']] || []).push(x);
+          return rv;
+        }, {});
+      callback(res);
+    }
+    );
+}
+
 export default class Settings extends React.Component {
   constructor(props) {
     super(props);
@@ -21,13 +34,88 @@ export default class Settings extends React.Component {
 
     this.state =
     {
-      settings: clone(settings, false)
+      settings: clone(settings, false),
+      deviceInit: false
     };
+    this.deviceInit = this.deviceInit.bind(this);
+    groupingConnectedDevices(this.deviceInit);
+  }
+
+  deviceInit(group) {
+    logger.debug('device init, devices : ', group);
+    const settings = this.state.settings;
+    if (!settings.audioinputkey) {
+      settings.audioinputkey = group.audioinput[0].deviceId;
+    }
+
+    if (!settings.audiooutputkey) {
+      settings.audiooutputkey = group.audiooutput[0].deviceId;
+    }
+
+    if (!settings.videoinputkey) {
+      settings.videoinputkey = group.videoinput[0].deviceId;
+    }
+
+    this.setState({
+      ...settings,
+      audioinput: group.audioinput,
+      audiooutput: group.audiooutput,
+      videoinput: group.videoinput,
+      deviceInit: true
+    });
   }
 
   render() {
     const settings = this.state.settings;
+    let audioinput;
+    let audiooutput;
+    let videoinput;
+    let audioinputSelector;
+    let audiooutputSelector;
+    let videoinputSelector;
+    if (this.state.deviceInit) {
+      audioinput = this.state.audioinput || [];
+      audiooutput = this.state.audiooutput || [];
+      videoinput = this.state.videoinput || [];
 
+      audioinputSelector = (
+        <div className='item'>
+          <SelectField
+            floatingLabelText='audioinput'
+            value={settings.audioinputkey}
+            fullWidth
+            onChange={this.handleChangeAudioinput.bind(this)}
+          >
+            {audioinput.map(d => {
+              return (<MenuItem value={d.deviceId} key={d.deviceId} primaryText={d.label} />)
+            })}
+          </SelectField></div>);
+
+      audiooutputSelector = (
+        <div className='item'>
+          <SelectField
+            floatingLabelText='audiooutput'
+            value={settings.audiooutputkey}
+            fullWidth
+            onChange={this.handleChangeAudiooutput.bind(this)}
+          >
+            {audiooutput.map(d => {
+              return (<MenuItem value={d.deviceId} key={d.deviceId} primaryText={d.label} />)
+            })}
+          </SelectField></div>);
+      videoinputSelector = (
+        <div className='item'>
+          <SelectField
+            floatingLabelText='videoinput'
+            value={settings.videoinputkey}
+            fullWidth
+            onChange={this.handleChangeVideoinput.bind(this)}
+          >
+            {videoinput.map(d => {
+              return (<MenuItem value={d.deviceId} key={d.deviceId} primaryText={d.label} />)
+            })}
+          </SelectField></div>);
+    }
     return (
       <TransitionAppear duration={250}>
         <div data-component='Settings'>
@@ -78,6 +166,11 @@ export default class Settings extends React.Component {
               <MenuItem value='wss' primaryText='WSS' />
             </SelectField>
           </div>
+
+
+          {audioinputSelector}
+          {audiooutputSelector}
+          {videoinputSelector}
 
           <div className='item'>
             <SelectField
@@ -205,7 +298,7 @@ export default class Settings extends React.Component {
             />
           </div>
         </div>
-      </TransitionAppear>
+      </TransitionAppear >
     );
   }
 
@@ -237,6 +330,26 @@ export default class Settings extends React.Component {
     this.setState({ settings });
   }
 
+  handleChangeAudioinput(event, key, value) {
+    const settings = this.state.settings;
+
+    settings.audioinputkey = value;
+    this.setState({ settings });
+  }
+
+  handleChangeAudiooutput(event, key, value) {
+    const settings = this.state.settings;
+
+    settings.audiooutputkey = value;
+    this.setState({ settings });
+  }
+
+  handleChangeVideoinput(event, key, value) {
+    const settings = this.state.settings;
+
+    settings.videooutputkey = value;
+    this.setState({ settings });
+  }
 
   handleChangeResolution(event, key, value) {
     const settings = this.state.settings;
