@@ -26,8 +26,8 @@ const callstatsjssip = window.callstatsjssip;
 
 const logger = new Logger('Phone');
 
-const sdpLog = ({ originator, type, sdp }) => {
-  logger.debug('sdp handler log');
+const sdpLog = (sdp) => {
+  logger.debug('sdp : ', sdp);
   // logger.debug('sdp originator : ', originator);
   // logger.debug('sdp type : ', type);
   // logger.debug('sdp sdp : ', sdp);
