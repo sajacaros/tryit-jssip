@@ -3,6 +3,10 @@ import PropTypes from 'prop-types';
 import HangUpIcon from 'material-ui/svg-icons/communication/call-end';
 import PauseIcon from 'material-ui/svg-icons/av/pause-circle-outline';
 import ResumeIcon from 'material-ui/svg-icons/av/play-circle-outline';
+import MicMuteIcon from 'material-ui/svg-icons/av/mic';
+import MicUnMutedIcon from 'material-ui/svg-icons/av/mic-off';
+import CamIcon from 'material-ui/svg-icons/av/videocam';
+import CamOffIcon from 'material-ui/svg-icons/av/videocam-off';
 import classnames from 'classnames';
 import JsSIP from 'jssip';
 import Logger from '../Logger';
@@ -20,6 +24,8 @@ export default class Session extends React.Component {
       remoteHasVideo: false,
       localHold: false,
       remoteHold: false,
+      audioMuted: false,
+      videoMuted: false,
       canHold: false,
       ringing: false
     };
@@ -92,6 +98,40 @@ export default class Session extends React.Component {
                     className='control'
                     color={'#fff'}
                     onClick={this.handleResume.bind(this)}
+                  />
+                </Otherwise>
+              </Choose>
+              <Choose>
+                <When condition={!state.audioMuted}>
+                  <MicMuteIcon
+                    className='control'
+                    color={'#fff'}
+                    onClick={this.handleAudioMute.bind(this)}
+                  />
+                </When>
+
+                <Otherwise>
+                  <MicUnMutedIcon
+                    className='control'
+                    color={'#fff'}
+                    onClick={this.handleAudioUnMute.bind(this)}
+                  />
+                </Otherwise>
+              </Choose>
+              <Choose>
+                <When condition={!state.videoMuted}>
+                  <CamIcon
+                    className='control'
+                    color={'#fff'}
+                    onClick={this.handleVideoMute.bind(this)}
+                  />
+                </When>
+
+                <Otherwise>
+                  <CamOffIcon
+                    className='control'
+                    color={'#fff'}
+                    onClick={this.handleVideoUnMute.bind(this)}
                   />
                 </Otherwise>
               </Choose>
@@ -247,6 +287,23 @@ export default class Session extends React.Component {
       }
     });
 
+    session.on('mute', ({ audio, video }) => {
+      if (!this._mounted)
+        return;
+
+      logger.debug('mute event, audio muted : ', audio, 'video muted : ', video);
+      this.setState({ videoMuted: video, audioMuted: audio });
+    });
+
+    session.on('unmute', ({ audio, video }) => {
+      if (!this._mounted)
+        return;
+
+      logger.debug('unmute event, audio muted : ', audio, 'video muted : ', video);
+      this.setState({ videoMuted: video, audioMuted: audio });
+    });
+
+
     peerconnection.addEventListener('track', (event) => {
       logger.debug('peerconnection : ', peerconnection);
       logger.debug('peerconnection "track" event, event : ', event);
@@ -294,6 +351,31 @@ export default class Session extends React.Component {
     logger.debug('handleResume()');
 
     this.props.session.unhold({ useUpdate: true });
+  }
+
+  handleAudioMute() {
+    logger.debug('handleAudioMute()');
+
+    this.props.session.mute({ audio: false });
+  }
+
+  handleAudioUnMute() {
+    logger.debug('handleAudioUnMute()');
+
+    this.props.session.mute({ audio: true });
+  }
+
+
+  handleVideoMute() {
+    logger.debug('handleVideoMute()');
+
+    this.props.session.mute({ video: true });
+  }
+
+  handleVideoUnMute() {
+    logger.debug('handleVideoUnMute()');
+
+    this.props.session.mute({ video: false });
   }
 
   _handleRemoteStream(stream, audiooutputkey) {
