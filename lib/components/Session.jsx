@@ -267,7 +267,7 @@ export default class Session extends React.Component {
         return;
       }
 
-      this._handleRemoteStream(event.streams[0]);
+      this._handleRemoteStream(event.streams[0], audiooutputkey);
     });
   }
 
