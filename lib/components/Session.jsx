@@ -303,8 +303,8 @@ export default class Session extends React.Component {
 
     // Display remote stream
     remoteVideo.srcObject = stream;
-    remoteVideo.setSinkId(audiooutpukey)
-      .then(() => logger.debug('complete to set audio output, deviceId : ', audiooutpukey));
+    remoteVideo.setSinkId(audiooutputkey)
+      .then(() => logger.debug('complete to set audio output, deviceId : ', audiooutputkey));
 
     this._checkRemoteVideo(stream);
 
