@@ -113,7 +113,7 @@ export default class Session extends React.Component {
     const localStream = peerconnection.getLocalStreams()[0];
     const remoteStream = peerconnection.getRemoteStreams()[0];
     const bandwidth = parseInt(this.props.bandwidth);
-    const audiooutputkey = this.props.audiooutpukey;
+    const audiooutputkey = this.props.audiooutputkey;
 
     // Handle local stream
     if (localStream) {
