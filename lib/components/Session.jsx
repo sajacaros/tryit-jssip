@@ -357,12 +357,14 @@ export default class Session extends React.Component {
     logger.debug('handleAudioMute()');
 
     this.props.session.mute({ audio: true });
+    this.setState({audioMuted: true});
   }
 
   handleAudioUnMute() {
     logger.debug('handleAudioUnMute()');
 
     this.props.session.unmute({ audio: true });
+    this.setState({audioMuted: false});
   }
 
 
@@ -370,12 +372,14 @@ export default class Session extends React.Component {
     logger.debug('handleVideoMute()');
 
     this.props.session.mute({ video: true });
+    this.setState({videoMuted: true});
   }
 
   handleVideoUnMute() {
     logger.debug('handleVideoUnMute()');
 
     this.props.session.unmute({ video: true });
+    this.setState({videoMuted: false});
   }
 
   _handleRemoteStream(stream, audiooutputkey) {
