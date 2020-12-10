@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import HangUpIcon from 'material-ui/svg-icons/communication/call-end';
 import PauseIcon from 'material-ui/svg-icons/av/pause-circle-outline';
 import ResumeIcon from 'material-ui/svg-icons/av/play-circle-outline';
-import MicMuteIcon from 'material-ui/svg-icons/av/mic';
-import MicUnMutedIcon from 'material-ui/svg-icons/av/mic-off';
+import MicOnIcon from 'material-ui/svg-icons/av/mic';
+import MicOffIcon from 'material-ui/svg-icons/av/mic-off';
 import CamIcon from 'material-ui/svg-icons/av/videocam';
 import CamOffIcon from 'material-ui/svg-icons/av/videocam-off';
 import classnames from 'classnames';
@@ -103,7 +103,7 @@ export default class Session extends React.Component {
               </Choose>
               <Choose>
                 <When condition={!state.audioMuted}>
-                  <MicMuteIcon
+                  <MicOnIcon
                     className='control'
                     color={'#fff'}
                     onClick={this.handleAudioMute.bind(this)}
@@ -111,7 +111,7 @@ export default class Session extends React.Component {
                 </When>
 
                 <Otherwise>
-                  <MicUnMutedIcon
+                  <MicOffIcon
                     className='control'
                     color={'#fff'}
                     onClick={this.handleAudioUnMute.bind(this)}

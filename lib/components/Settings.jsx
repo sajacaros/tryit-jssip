@@ -13,17 +13,23 @@ import Slider from 'material-ui/Slider';
 
 const logger = new Logger('Settings');
 
-function groupingConnectedDevices(callback) {
-  navigator.mediaDevices.enumerateDevices()
-    .then(devices => {
-      const res = devices.reduce(
-        function (rv, x) {
-          (rv[x['kind']] = rv[x['kind']] || []).push(x);
-          return rv;
+function groupingConnectedDevices(callback) {  
+  (async() => {
+    let devicesGroupByKind;
+    try {
+      await navigator.mediaDevices.getUserMedia({audio:true,video:true});
+      const devices = await navigator.mediaDevices.enumerateDevices();
+      devicesGroupByKind = devices.reduce(
+        (group, device) => {
+          (group[device['kind']] = group[device['kind']] || []).push(device);
+          return group;
         }, {});
-      callback(res);
+      } catch(e) {
+        logger.debug(e);
+      return;
     }
-    );
+    callback(devicesGroupByKind);
+  })();
 }
 
 export default class Settings extends React.Component {
@@ -37,11 +43,11 @@ export default class Settings extends React.Component {
       settings: clone(settings, false),
       deviceInit: false
     };
-    this.deviceInit = this.deviceInit.bind(this);
-    groupingConnectedDevices(this.deviceInit);
+    this.initDevice = this.initDevice.bind(this);
+    groupingConnectedDevices(this.initDevice);
   }
 
-  deviceInit(group) {
+  initDevice(group) {
     logger.debug('device init, devices : ', group);
     const settings = this.state.settings;
     if (!settings.audioinputkey) {
@@ -73,7 +79,7 @@ export default class Settings extends React.Component {
     let audioinputSelector;
     let audiooutputSelector;
     let videoinputSelector;
-    if (this.state.deviceInit) {
+    // if (this.state.deviceInit) {
       audioinput = this.state.audioinput || [];
       audiooutput = this.state.audiooutput || [];
       videoinput = this.state.videoinput || [];
@@ -115,7 +121,7 @@ export default class Settings extends React.Component {
               return (<MenuItem value={d.deviceId} key={d.deviceId} primaryText={d.label} />)
             })}
           </SelectField></div>);
-    }
+    // }
     return (
       <TransitionAppear duration={250}>
         <div data-component='Settings'>
