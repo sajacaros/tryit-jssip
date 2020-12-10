@@ -68,6 +68,7 @@ export default class Session extends React.Component {
             ref='remoteVideo'
             className={classnames('remote-video', { hidden: noRemoteVideo })}
             autoPlay
+            controls
           />
 
           <If condition={noRemoteVideo}>
@@ -286,23 +287,6 @@ export default class Session extends React.Component {
           break;
       }
     });
-
-    session.on('mute', ({ audio, video }) => {
-      if (!this._mounted)
-        return;
-
-      logger.debug('mute event, audio muted : ', audio, 'video muted : ', video);
-      this.setState({ videoMuted: video, audioMuted: audio });
-    });
-
-    session.on('unmute', ({ audio, video }) => {
-      if (!this._mounted)
-        return;
-
-      logger.debug('unmute event, audio muted : ', audio, 'video muted : ', video);
-      this.setState({ videoMuted: video, audioMuted: audio });
-    });
-
 
     peerconnection.addEventListener('track', (event) => {
       logger.debug('peerconnection : ', peerconnection);
