@@ -17,9 +17,10 @@ export default class Dialer extends React.Component
 
 		this.state =
 		{
-			uri : props.callme || ''
+      uri : props.callme || '',
+      stats : props.stats
 		};
-	}
+  }
 
 	render()
 	{
@@ -39,10 +40,9 @@ export default class Dialer extends React.Component
 				</div>
 
         <TextField
-          hintText='bandwidth'
           fullWidth
           disabled
-          value={state.stats}
+          value={props.status? props.stats + 'kbps':'bandwidth'}
         />
 
 				<form

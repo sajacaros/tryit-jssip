@@ -319,9 +319,6 @@ export default class Session extends React.Component {
                 let headerBytes;
                 let packets;
                 if (report.type === 'outbound-rtp') {
-                  if (report.isRemote) {
-                    return;
-                  }
                   const now = report.timestamp;
                   bytes = report.bytesSent;
                   headerBytes = report.headerBytesSent;
