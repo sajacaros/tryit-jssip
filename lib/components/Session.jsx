@@ -27,9 +27,6 @@ function changeBandwidth(connection, bandwidth) {
       sender.setParameters(parameters)
         .then(() => logger.debug('bandwidth setting complete, bandwidth : ', bandwidth * 1000))
         .catch(e => console.error(e));
-
-      this._handleRemoteStream(event.streams[0], audiooutputkey);
-      this.setState({sender: sender});
   });
 }
 
