@@ -311,6 +311,7 @@ export default class Session extends React.Component {
           }
     
           this._handleRemoteStream(event.streams[0], audiooutputkey);
+          let lastResult;
           window.setInterval(() => {
             sender.getStats().then(res => {
               res.forEach(report => {
