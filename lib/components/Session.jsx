@@ -14,7 +14,7 @@ import TransitionAppear from './TransitionAppear';
 
 const logger = new Logger('Session');
 
-function changeBandwidth(connection) {
+function changeBandwidth(connection, bandwidth) {
   connection.getSenders()
     .filter(sender => sender.track.kind==='video')
     .forEach(sender => {
@@ -196,7 +196,7 @@ export default class Session extends React.Component {
     if (remoteStream) {
       logger.debug('already have a remote stream');
 
-      changeBandwidth(peerconnection);
+      changeBandwidth(peerconnection, bandwidth);
       
       this._handleRemoteStream(remoteStream, audiooutputkey);
     }
@@ -316,7 +316,7 @@ export default class Session extends React.Component {
       }
       logger.debug('peerconnection : ', peerconnection);
       logger.debug('peerconnection "track" event, event : ', event);
-      changeBandwidth(peerconnection);
+      changeBandwidth(peerconnection, bandwidth);
       this._handleRemoteStream(event.stream, audiooutputkey);
     });
   }
