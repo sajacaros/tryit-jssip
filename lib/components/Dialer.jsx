@@ -37,7 +37,11 @@ export default class Dialer extends React.Component
 						fullWidth
 					/>
 				</div>
-
+        <TextField
+          fullWidth
+          disabled
+          value={state.stats.bandwidth? state.stats.bandwidth:'no stats'}
+        />
 				<form
 					className={classnames('uri-form', { hidden: props.busy && utils.isMobile() })}
 					action=''
