@@ -314,7 +314,7 @@ export default class Session extends React.Component {
       logger.debug('peerconnection : ', peerconnection);
       logger.debug('peerconnection "track" event, event : ', event);
       changeBandwidth(peerconnection, bandwidth);
-      this._handleRemoteStream(event.stream, audiooutputkey);
+      this._handleRemoteStream(event.streams[0], audiooutputkey);
     });
   }
 
