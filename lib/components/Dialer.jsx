@@ -42,7 +42,7 @@ export default class Dialer extends React.Component
         <TextField
           fullWidth
           disabled
-          value={props.status? props.stats + 'kbps':'bandwidth'}
+          value={!props.status? props.stats + 'kbps':'bandwidth'}
         />
 
 				<form
