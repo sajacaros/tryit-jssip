@@ -14,6 +14,25 @@ import TransitionAppear from './TransitionAppear';
 
 const logger = new Logger('Session');
 
+function changeBandwidth(connection) {
+  connection.getSenders()
+    .filter(sender => sender.track.kind==='video')
+    .forEach(sender => {
+      logger.debug('sender bandwidth setting, sender : ', sender);
+      const parameters = sender.getParameters();
+      if (!parameters.encodings) {
+        parameters.encodings = [{}];
+      }
+      parameters.encodings[0].maxBitrate = bandwidth * 1000;
+      sender.setParameters(parameters)
+        .then(() => logger.debug('bandwidth setting complete, bandwidth : ', bandwidth * 1000))
+        .catch(e => console.error(e));
+
+      this._handleRemoteStream(event.streams[0], audiooutputkey);
+      this.setState({sender: sender});
+  });
+}
+
 export default class Session extends React.Component {
   constructor(props) {
     super(props);
@@ -177,6 +196,8 @@ export default class Session extends React.Component {
     if (remoteStream) {
       logger.debug('already have a remote stream');
 
+      changeBandwidth(peerconnection);
+      
       this._handleRemoteStream(remoteStream, audiooutputkey);
     }
 
@@ -289,30 +310,14 @@ export default class Session extends React.Component {
     });
 
     peerconnection.addEventListener('track', (event) => {
+      if (!this._mounted) {
+        logger.error('_handleRemoteStream() | component not mounted');
+        return;
+      }
       logger.debug('peerconnection : ', peerconnection);
       logger.debug('peerconnection "track" event, event : ', event);
-      peerconnection.getSenders()
-        .filter(sender => sender.track.kind==='video')
-        .forEach(sender => {
-          logger.debug('sender bandwidth setting, sender : ', sender);
-          const parameters = sender.getParameters();
-          if (!parameters.encodings) {
-            parameters.encodings = [{}];
-          }
-          parameters.encodings[0].maxBitrate = bandwidth * 1000;
-          sender.setParameters(parameters)
-            .then(() => logger.debug('bandwidth setting complete, bandwidth : ', bandwidth * 1000))
-            .catch(e => console.error(e));
-    
-          if (!this._mounted) {
-            logger.error('_handleRemoteStream() | component not mounted');
-    
-            return;
-          }
-    
-          this._handleRemoteStream(event.streams[0], audiooutputkey);
-          this.setState({sender: sender});
-        });
+      changeBandwidth(peerconnection);
+      this._handleRemoteStream(event.stream, audiooutputkey);
     });
   }
 
