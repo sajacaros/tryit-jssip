@@ -295,48 +295,13 @@ export default class Session extends React.Component {
       peerconnection.getSenders()
         .filter(sender => sender.track.kind==='video')
         .forEach(sender => {
-          logger.debug('sender bandwidth setting, sender : ', sender);
-          const parameters = sender.getParameters();
-          if (!parameters.encodings) {
-            parameters.encodings = [{}];
-          }
-          parameters.encodings[0].maxBitrate = bandwidth * 1000;
-          sender.setParameters(parameters)
-            .then(() => logger.debug('bandwidth setting complete, bandwidth : ', bandwidth * 1000))
-            .catch(e => console.error(e));
-    
           if (!this._mounted) {
             logger.error('_handleRemoteStream() | component not mounted');
     
             return;
           }
-    
+
           this._handleRemoteStream(event.streams[0], audiooutputkey);
-          let lastResult;
-          window.setInterval(() => {
-            sender.getStats().then(res => {
-              res.forEach(report => {
-                let bytes;
-                let headerBytes;
-                let packets;
-                if (report.type === 'outbound-rtp') {
-                  const now = report.timestamp;
-                  bytes = report.bytesSent;
-                  headerBytes = report.headerBytesSent;
-          
-                  packets = report.packetsSent;
-                  if (lastResult && lastResult.has(report.id)) {
-                    // calculate bitrate
-                    const bitrate = 8 * (bytes - lastResult.get(report.id).bytesSent) /
-                      (now - lastResult.get(report.id).timestamp);
-                    this.props.onStats(bitrate);
-                  }
-                }
-              });
-              lastResult = res;
-            });
-          }, 1000);
-          
         });
     });
   }

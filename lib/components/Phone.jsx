@@ -212,7 +212,6 @@ export default class Phone extends React.Component {
                 onHideNotification={props.onHideNotification}
                 bandwidth={props.settings.bandwidth}
                 audiooutputkey={props.settings.audiooutputkey}
-                onStats={this.onStats.bind(this)}
               />
             </If>
 
@@ -406,7 +405,22 @@ export default class Phone extends React.Component {
           // logger.debug("386 tranformed sdp : ", data.sdp);
         }
       });
-      session.on('peerconnection', e => logger.debug('413 peerconnection : ', e));
+      session.on('peerconnection', pc => {
+        pc.getSenders()
+        .filter(sender => sender.track.kind==='video')
+        .forEach(sender => {
+          logger.debug('sender bandwidth setting, sender : ', sender);
+          const parameters = sender.getParameters();
+          if (!parameters.encodings) {
+            parameters.encodings = [{}];
+          }
+          parameters.encodings[0].maxBitrate = bandwidth * 1000;
+          sender.setParameters(parameters)
+            .then(() => logger.debug('bandwidth setting complete, bandwidth : ', bandwidth * 1000))
+            .catch(e => console.error(e));
+        });
+        logger.debug('413 peerconnection : ', pc); 
+      });
     });
 
     this._ua.start();
@@ -519,7 +533,22 @@ export default class Phone extends React.Component {
       }
     });
 
-    session.on('peerconnection', e => logger.debug('532 peerconnection : ', e));
+    session.on('peerconnection', pc => {
+      pc.getSenders()
+        .filter(sender => sender.track.kind==='video')
+        .forEach(sender => {
+          logger.debug('sender bandwidth setting, sender : ', sender);
+          const parameters = sender.getParameters();
+          if (!parameters.encodings) {
+            parameters.encodings = [{}];
+          }
+          parameters.encodings[0].maxBitrate = bandwidth * 1000;
+          sender.setParameters(parameters)
+            .then(() => logger.debug('bandwidth setting complete, bandwidth : ', bandwidth * 1000))
+            .catch(e => console.error(e));
+        });
+      logger.debug('532 peerconnection : ', pc);
+    });
   }
 
   handleAnswerIncoming() {
