@@ -39,11 +39,11 @@ export default class Dialer extends React.Component
 				</div>
 
         <TextField
-							fullWidth
-							disabled
-							value={state.stats}
-							onChange={this.handleUriChange.bind(this)}
-						/>
+          hintText='bandwidth'
+          fullWidth
+          disabled
+          value={state.stats}
+        />
 
 				<form
 					className={classnames('uri-form', { hidden: props.busy && utils.isMobile() })}
