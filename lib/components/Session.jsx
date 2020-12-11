@@ -288,6 +288,7 @@ export default class Session extends React.Component {
       }
     });
 
+    logger.debug('peerconnection track event added');
     peerconnection.addEventListener('track', (event) => {
       logger.debug('peerconnection : ', peerconnection);
       logger.debug('peerconnection "track" event, event : ', event);

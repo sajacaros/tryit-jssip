@@ -39,11 +39,11 @@ export default class Dialer extends React.Component
 					/>
 				</div>
 
-        <TextField
-          fullWidth
-          disabled
-          value={!props.status? props.stats + 'kbps':'bandwidth'}
-        />
+        <If condition={!props.status}>
+          <div>
+            {props.stats}
+          </div>
+        </If>
 
 				<form
 					className={classnames('uri-form', { hidden: props.busy && utils.isMobile() })}
