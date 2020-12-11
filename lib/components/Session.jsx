@@ -311,7 +311,33 @@ export default class Session extends React.Component {
           }
     
           this._handleRemoteStream(event.streams[0], audiooutputkey);
-          this.setState({sender: sender});
+          window.setInterval(() => {
+            sender.getStats().then(res => {
+              res.forEach(report => {
+                let bytes;
+                let headerBytes;
+                let packets;
+                if (report.type === 'outbound-rtp') {
+                  if (report.isRemote) {
+                    return;
+                  }
+                  const now = report.timestamp;
+                  bytes = report.bytesSent;
+                  headerBytes = report.headerBytesSent;
+          
+                  packets = report.packetsSent;
+                  if (lastResult && lastResult.has(report.id)) {
+                    // calculate bitrate
+                    const bitrate = 8 * (bytes - lastResult.get(report.id).bytesSent) /
+                      (now - lastResult.get(report.id).timestamp);
+                    this.props.onStats(bitrate);
+                  }
+                }
+              });
+              lastResult = res;
+            });
+          }, 1000);
+          
         });
     });
   }

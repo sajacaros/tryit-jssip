@@ -200,6 +200,7 @@ export default class Phone extends React.Component {
               busy={Boolean(state.session || state.incomingSession)}
               callme={this._u.query.callme}
               onCall={this.handleOutgoingCall.bind(this)}
+              stats={state.stats}
             />
           </header>
 
@@ -211,6 +212,7 @@ export default class Phone extends React.Component {
                 onHideNotification={props.onHideNotification}
                 bandwidth={props.settings.bandwidth}
                 audiooutputkey={props.settings.audiooutputkey}
+                onStats={this.onStats.bind(this)}
               />
             </If>
 
@@ -450,6 +452,10 @@ export default class Phone extends React.Component {
     this.props.onExit();
   }
 
+  onStats(stats) {
+    logger.debug('stats : ', stats);
+    this.setState({stats:stats});
+  }
   handleOutgoingCall(uri) {
     logger.debug('handleOutgoingCall() [uri:"%s"]', uri);
 
