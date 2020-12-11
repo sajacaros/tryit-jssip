@@ -156,6 +156,20 @@ export default class Session extends React.Component {
     const bandwidth = parseInt(this.props.bandwidth);
     const audiooutputkey = this.props.audiooutputkey;
 
+
+    peerconnection.getSenders()
+      .filter(sender => sender.track.kind==='video')
+      .forEach(sender => {
+        logger.debug('sender bandwidth setting, sender : ', sender);
+        const parameters = sender.getParameters();
+        if (!parameters.encodings) {
+          parameters.encodings = [{}];
+        }
+        parameters.encodings[0].maxBitrate = bandwidth * 1000;
+        sender.setParameters(parameters)
+          .then(() => logger.debug('bandwidth setting complete, bandwidth : ', bandwidth * 1000))
+          .catch(e => console.error(e));
+      });
     // Handle local stream
     if (localStream) {
       // Clone local stream
@@ -176,7 +190,6 @@ export default class Session extends React.Component {
     // If incoming all we already have the remote stream
     if (remoteStream) {
       logger.debug('already have a remote stream');
-
       this._handleRemoteStream(remoteStream, audiooutputkey);
     }
 
@@ -290,7 +303,6 @@ export default class Session extends React.Component {
 
     logger.debug('peerconnection track event added');
     peerconnection.addEventListener('track', (event) => {
-      logger.debug('peerconnection : ', peerconnection);
       logger.debug('peerconnection "track" event, event : ', event);
       peerconnection.getSenders()
         .filter(sender => sender.track.kind==='video')
@@ -300,8 +312,8 @@ export default class Session extends React.Component {
     
             return;
           }
-
-          this._handleRemoteStream(event.streams[0], audiooutputkey);
+    
+          this._handleRemoteStream(event.streams[0], audiooutputkey);  
         });
     });
   }
