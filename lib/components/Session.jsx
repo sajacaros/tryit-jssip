@@ -291,24 +291,28 @@ export default class Session extends React.Component {
     peerconnection.addEventListener('track', (event) => {
       logger.debug('peerconnection : ', peerconnection);
       logger.debug('peerconnection "track" event, event : ', event);
-      const sender = peerconnection.getSenders()[0];
-      logger.debug('sender : ', sender);
-      const parameters = sender.getParameters();
-      if (!parameters.encodings) {
-        parameters.encodings = [{}];
-      }
-      parameters.encodings[0].maxBitrate = bandwidth * 1000;
-      sender.setParameters(parameters)
-        .then(() => logger.debug('bandwidth setting complete, bandwidth : ', bandwidth * 1000))
-        .catch(e => console.error(e));
-
-      if (!this._mounted) {
-        logger.error('_handleRemoteStream() | component not mounted');
-
-        return;
-      }
-
-      this._handleRemoteStream(event.streams[0], audiooutputkey);
+      peerconnection.getSenders()
+        .filter(sender => sender.track.kind==='video')
+        .foreach(sender => {
+          logger.debug('sender bandwidth setting, sender : ', sender);
+          const parameters = sender.getParameters();
+          if (!parameters.encodings) {
+            parameters.encodings = [{}];
+          }
+          parameters.encodings[0].maxBitrate = bandwidth * 1000;
+          sender.setParameters(parameters)
+            .then(() => logger.debug('bandwidth setting complete, bandwidth : ', bandwidth * 1000))
+            .catch(e => console.error(e));
+    
+          if (!this._mounted) {
+            logger.error('_handleRemoteStream() | component not mounted');
+    
+            return;
+          }
+    
+          this._handleRemoteStream(event.streams[0], audiooutputkey);
+          this.setState({sender: sender});
+        });
     });
   }
 
