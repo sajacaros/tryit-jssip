@@ -293,7 +293,7 @@ export default class Session extends React.Component {
       logger.debug('peerconnection "track" event, event : ', event);
       peerconnection.getSenders()
         .filter(sender => sender.track.kind==='video')
-        .foreach(sender => {
+        .forEach(sender => {
           logger.debug('sender bandwidth setting, sender : ', sender);
           const parameters = sender.getParameters();
           if (!parameters.encodings) {
