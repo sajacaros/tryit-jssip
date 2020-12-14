@@ -353,7 +353,7 @@ export default class Settings extends React.Component {
   handleChangeVideoinput(event, key, value) {
     const settings = this.state.settings;
 
-    settings.videooutputkey = value;
+    settings.videoinputkey = value;
     this.setState({ settings });
   }
 
