@@ -1,10 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import CopyToClipboard from 'react-copy-to-clipboard';
-import IconMenu from 'material-ui/IconMenu';
-import MenuItem from 'material-ui/MenuItem';
-import IconButton from 'material-ui/IconButton/IconButton';
-import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+import MenuItem from '@material-ui/core/MenuItem';
+import IconButton from '@material-ui/core/IconButton';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 import JsSIP from 'jssip';
 import UrlParse from 'url-parse';
 import Logger from '../Logger';
@@ -164,21 +163,19 @@ export default class Phone extends React.Component {
                 size='small'
               />
 
-              <IconMenu
-                iconButtonElement={
+              <Menu
+                MenuListProps={
                   <IconButton>
                     <MoreVertIcon color='#fff' />
                   </IconButton>
                 }
                 anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
-                targetOrigin={{ horizontal: 'right', vertical: 'top' }}
+                transformOrigin={{ horizontal: 'right', vertical: 'top' }}
               >
                 <CopyToClipboard text={invitationLink}
                   onCopy={this.handleMenuCopyInvitationLink.bind(this)}
                 >
-                  <MenuItem
-                    primaryText='Copy invitation link'
-                  />
+                  <MenuItem>Copy invitation link</MenuItem>
                 </CopyToClipboard>
                 <CopyToClipboard text={props.settings.uri || ''}
                   onCopy={this.handleMenuCopyUri.bind(this)}
@@ -191,7 +188,7 @@ export default class Phone extends React.Component {
                   primaryText='Exit'
                   onClick={this.handleMenuExit.bind(this)}
                 />
-              </IconMenu>
+              </Menu>
             </div>
 
             <Dialer

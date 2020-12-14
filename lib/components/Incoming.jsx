@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import RaisedButton from 'material-ui/RaisedButton';
-import AnswerIcon from 'material-ui/svg-icons/communication/phone';
-import RejectIcon from 'material-ui/svg-icons/communication/call-end';
+import Button from '@material-ui/core/Button';
+import AnswerIcon from '@material-ui/icons/Phone';
+import RejectIcon from '@material-ui/icons/CallEnd';
 import Logger from '../Logger';
 import TransitionAppear from './TransitionAppear';
 import UserChip from './UserChip';
@@ -31,13 +31,13 @@ export default class Incoming extends React.Component
 					/>
 
 					<div className='buttons'>
-						<RaisedButton
+						<Button
 							label='Answer'
 							primary
 							icon={<AnswerIcon color={'#fff'}/>}
 							onClick={this.handleClickAnswer.bind(this)}
 						/>
-						<RaisedButton
+						<Button
 							label='Reject'
 							secondary
 							icon={<RejectIcon color={'#fff'}/>}

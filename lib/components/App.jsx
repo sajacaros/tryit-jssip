@@ -1,9 +1,8 @@
 import React from 'react';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+// import { ThemeProvider } from '@material-ui/core/styles';
 import Logger from '../Logger';
 import settingsManager from '../settingsManager';
-import muiTheme from './muiTheme';
-import Snackbar from 'material-ui/Snackbar';
+import Snackbar from '@material-ui/core/Snackbar';
 import Notifier from './Notifier';
 import Login from './Login';
 import Phone from './Phone';
@@ -65,7 +64,7 @@ export default class App extends React.Component
 		}
 
 		return (
-			<MuiThemeProvider muiTheme={muiTheme}>
+			// <ThemeProvider>
 				<div data-component='App'>
 					<Notifier ref='Notifier'/>
 
@@ -78,7 +77,7 @@ export default class App extends React.Component
 						onRequestClose={() => {}} // Avoid auto-hide on click away
 					/>
 				</div>
-			</MuiThemeProvider>
+			// </ThemeProvider>
 		);
 	}
 

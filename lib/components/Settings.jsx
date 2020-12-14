@@ -1,15 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { List, ListItem } from 'material-ui/List';
-import TextField from 'material-ui/TextField';
-import Toggle from 'material-ui/Toggle';
-import SelectField from 'material-ui/SelectField';
-import MenuItem from 'material-ui/MenuItem';
-import RaisedButton from 'material-ui/RaisedButton';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import ListItemText from '@material-ui/core/ListItemText';
+import Switch from '@material-ui/core/Switch';
+import TextField from '@material-ui/core/TextField';
+
+import InputLabel from '@material-ui/core/InputLabel';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+
+import Button from '@material-ui/core/Button';
 import clone from 'clone';
 import Logger from '../Logger';
 import TransitionAppear from './TransitionAppear';
-import Slider from 'material-ui/Slider';
+import Slider from '@material-ui/core/Slider';
+import Typography from '@material-ui/core/Typography';7
 
 const logger = new Logger('Settings');
 
@@ -86,42 +94,60 @@ export default class Settings extends React.Component {
 
       audioinputSelector = (
         <div className='item'>
-          <SelectField
-            floatingLabelText='audioinput'
+          <InputLabel shrink id="audioinput-label">
+            audioinput
+          </InputLabel>
+          <Select
+            labelId="audioinput-label"
+            id="audioinput-select"
+            defaultValue={settings.audioinputkey}
             value={settings.audioinputkey}
-            fullWidth
             onChange={this.handleChangeAudioinput.bind(this)}
+            fullWidth
           >
             {audioinput.map(d => {
-              return (<MenuItem value={d.deviceId} key={d.deviceId} primaryText={d.label} />)
+              return (<MenuItem value={d.deviceId} key={d.deviceId}>{d.label}</MenuItem>)
             })}
-          </SelectField></div>);
+          </Select>
+        </div>);
 
       audiooutputSelector = (
         <div className='item'>
-          <SelectField
-            floatingLabelText='audiooutput'
+          <InputLabel shrink id="audiooutput-label">
+            audiooutput
+          </InputLabel>
+          <Select
+            labelId="audiooutput-label"
+            id="audiooutput-select"
+            defaultValue={settings.audiooutputkey}
             value={settings.audiooutputkey}
-            fullWidth
             onChange={this.handleChangeAudiooutput.bind(this)}
+            fullWidth
           >
             {audiooutput.map(d => {
-              return (<MenuItem value={d.deviceId} key={d.deviceId} primaryText={d.label} />)
+              return (<MenuItem value={d.deviceId} key={d.deviceId}>{d.label}</MenuItem>)
             })}
-          </SelectField></div>);
+          </Select>
+        </div>);
+
       videoinputSelector = (
         <div className='item'>
-          <SelectField
-            floatingLabelText='videoinput'
+          <InputLabel shrink id="videoinput-label">
+            videoinput
+          </InputLabel>
+          <Select
+            labelId="videoinput-label"
+            id="videoinput-selector"
+            defaultValue={settings.videoinputkey}
             value={settings.videoinputkey}
-            fullWidth
             onChange={this.handleChangeVideoinput.bind(this)}
+            fullWidth
           >
             {videoinput.map(d => {
-              return (<MenuItem value={d.deviceId} key={d.deviceId} primaryText={d.label} />)
+              return (<MenuItem value={d.deviceId} key={d.deviceId}>{d.label}</MenuItem>)
             })}
-          </SelectField></div>);
-    // }
+          </Select>
+        </div>);
     return (
       <TransitionAppear duration={250}>
         <div data-component='Settings'>
@@ -159,144 +185,170 @@ export default class Settings extends React.Component {
           </div>
 
           <div className='item'>
-            <SelectField
-              floatingLabelText='Via transport'
+            <InputLabel shrink id="transport-label">
+              Via transport
+            </InputLabel>
+            <Select
+              labelId="transport-label"
+              id="transport-selecor"
               value={settings.socket.via_transport || 'auto'}
               fullWidth
               onChange={this.handleChangeViaTransport.bind(this)}
             >
-              <MenuItem value='auto' primaryText='auto' />
-              <MenuItem value='tcp' primaryText='TCP' />
-              <MenuItem value='tls' primaryText='TLS' />
-              <MenuItem value='ws' primaryText='WS' />
-              <MenuItem value='wss' primaryText='WSS' />
-            </SelectField>
+              <MenuItem value='auto'>auto</MenuItem>
+              <MenuItem value='tcp'>TCP</MenuItem>
+              <MenuItem value='tls'>TLS</MenuItem>
+              <MenuItem value='ws'>WS</MenuItem>
+              <MenuItem value='wss'>WSS</MenuItem>
+            </Select>
           </div>
-
 
           {audioinputSelector}
           {audiooutputSelector}
           {videoinputSelector}
 
           <div className='item'>
-            <SelectField
-              floatingLabelText='resolution'
+            <InputLabel shrink id="resolution-label">
+              Resolution
+            </InputLabel>
+            <Select
+              labelId="resolution-label"
+              id="resolution-selecor"
               value={settings.resolution || 'HD'}
               fullWidth
               onChange={this.handleChangeResolution.bind(this)}
             >
-              <MenuItem value='QVGA' primaryText='QVGA' />
-              <MenuItem value='VGA' primaryText='VGA' />
-              <MenuItem value='HD' primaryText='HD' />
-              <MenuItem value='FULLHD' primaryText='FULL HD' />
-              <MenuItem value='FOURK' primaryText='4K' />
-              <MenuItem value='EIGHTK' primaryText='8K' />
-            </SelectField>
+              <MenuItem value='QVGA'>QVGA</MenuItem>
+              <MenuItem value='VGA'>VGA</MenuItem>
+              <MenuItem value='HD'>HD</MenuItem>
+              <MenuItem value='FULLHD'>FULL HD</MenuItem>
+              <MenuItem value='FOURK'>4K</MenuItem>
+              <MenuItem value='EIGHTK'>8K</MenuItem>
+            </Select>
           </div>
 
           <div className='item'>
-            <SelectField
-              floatingLabelText='audio codec'
+            <InputLabel shrink id="audio-codec-label">
+              Audio Codec
+            </InputLabel>
+            <Select
+              labelId="audio-codec-label"
+              id="audio-codec-selecor"
               value={settings.audioCodec || 'opus'}
               fullWidth
               onChange={this.handleChangeAudioCodec.bind(this)}
             >
-              <MenuItem value='opus' primaryText='OPUS' />
-              <MenuItem value='PCMU' primaryText='PCMU' />
-              <MenuItem value='PCMA' primaryText='PCMA' />
-              <MenuItem value='G722' primaryText='G722' />
-            </SelectField>
+              <MenuItem value='opus'>OPUS</MenuItem>
+              <MenuItem value='PCMU'>PCMU</MenuItem>
+              <MenuItem value='PCMA'>PCMA</MenuItem>
+              <MenuItem value='G722'>G722</MenuItem>
+            </Select>
           </div>
 
           <div className='item'>
-            <SelectField
-              floatingLabelText='video codec'
+            <InputLabel shrink id="video-codec-label">
+              Video Codec
+            </InputLabel>
+            <Select
+              labelId="video-codec-label"
+              id="video-codec-selecor"
               value={settings.videoCodec || 'H264'}
               fullWidth
               onChange={this.handleChangeVideoCodec.bind(this)}
             >
-              <MenuItem value='H264' primaryText='H264' />
-              <MenuItem value='VP8' primaryText='VP8' />
-              <MenuItem value='VP9' primaryText='VP9' />
-            </SelectField>
+              <MenuItem value='H264'>H264</MenuItem>
+              <MenuItem value='VP8'>VP8</MenuItem>
+              <MenuItem value='VP9'>VP9</MenuItem>
+            </Select>
           </div>
+
           <div className='item'>
-            <SelectField
-              floatingLabelText='bandwidth'
+            <InputLabel shrink id="bandwidth-label">
+              Bandwidth
+            </InputLabel>
+            <Select
+              labelId="bandwidth-label"
+              id="bandwidth-selecor"
               value={settings.bandwidth || '1024'}
               fullWidth
               onChange={this.handleChangeBandwidth.bind(this)}
             >
-              <MenuItem value='128' primaryText='128 kbps' />
-              <MenuItem value='256' primaryText='256 kbps' />
-              <MenuItem value='512' primaryText='512 kbps' />
-              <MenuItem value='768' primaryText='768 kbps' />
-              <MenuItem value='1024' primaryText='1024 kbps' />
-              <MenuItem value='2048' primaryText='2048 kbps' />
-              <MenuItem value='4096' primaryText='4096 kbps' />
-              <MenuItem value='8192' primaryText='8192 kbps' />
-            </SelectField>
+              <MenuItem value='128'>128 kbps</MenuItem>
+              <MenuItem value='256'>256 kbps</MenuItem>
+              <MenuItem value='512'>512 kbps</MenuItem>
+              <MenuItem value='768'>786 kbps</MenuItem>
+              <MenuItem value='1024'>1024 kbps</MenuItem>
+              <MenuItem value='2048'>2048 kbps</MenuItem>
+              <MenuItem value='4096'>4096 kbps</MenuItem>
+              <MenuItem value='8192'>8192 kbps</MenuItem>
+            </Select>
           </div>
+
           <div className='item'>
-            <label>framerate: </label>
-            <span>{settings.framerateMin}</span>
-            <span>~</span>
-            <span>{settings.framerateMax}</span>
+            <Typography id="framerate-slider">
+              Framerate : {settings.framerateMin} ~ {settings.framerateMax}
+            </Typography>
             <Slider
-              value={settings.framerateMin}
-              onChange={this.handleChangeFramerateMin.bind(this)}
+              value={[settings.framerateMin, settings.framerateMax]}
+              onChange={this.handleChangeFramerate.bind(this)}
+              valueLabelDisplay="auto"
+              aria-labelledby="framerate-slider"
+              getAriaValueText={r=>`${r} bps`}
               min={0}
               max={60}
               step={5}
-            />
-            <Slider
-              value={settings.framerateMax}
-              onChange={this.handleChangeFramerateMax.bind(this)}
-              min={0}
-              max={60}
-              step={5}
+              valueLabelDisplay="on"
             />
           </div>
 
           <div className='separator' />
 
           <List>
-            <ListItem
-              primaryText='Session Timers'
-              secondaryText='Enable Session Timers as per RFC 4028'
-              secondaryTextLines={1}
-              rightToggle={
-                <Toggle
-                  defaultToggled={settings.session_timers}
-                  onToggle={this.handleToogleSessionTimers.bind(this)}
+            <ListItem>
+              <ListItemText 
+                primary='Session Timers'
+                secondary='Enable Session Timers as per RFC 4028'
+                id='switch-session-timer'
+              >
+              </ListItemText>
+              <ListItemSecondaryAction>
+                <Switch
+                  edge="end"
+                  onChange={this.handleToogleSessionTimers.bind(this)}
+                  checked={settings.session_timers}
+                  inputProps={{ 'aria-labelledby': 'switch-session-timer' }}
                 />
-              }
-            />
+              </ListItemSecondaryAction>
+            </ListItem>
 
-            <ListItem
-              primaryText='Preloaded Route'
-              secondaryText='Add a Route header with the server URI'
-              secondaryTextLines={1}
-              rightToggle={
-                <Toggle
-                  defaultToggled={settings.use_preloaded_route}
-                  onToggle={this.handleToogleUsePreloadedRoute.bind(this)}
+            <ListItem>
+              <ListItemText
+                primary='Preloaded Route'
+                secondary='Add a Route header with the server URI'
+                id='switch-preleaded-route'
+              />
+              <ListItemSecondaryAction>
+                <Switch
+                  edge="end"
+                  onChange={this.handleToogleUsePreloadedRoute.bind(this)}
+                  checked={settings.use_preloaded_route}
+                  inputProps={{ 'aria-labelledby': 'switch-session-timer' }}
                 />
-              }
-            />
+              </ListItemSecondaryAction>
+            </ListItem>
           </List>
 
           <div className='separator' />
 
           <div className='buttons'>
-            <RaisedButton
+            <Button
               label='Cancel'
               secondary
               style={{ display: 'block' }}
               onClick={this.handleCancel.bind(this)}
             />
 
-            <RaisedButton
+            <Button
               label='OK'
               primary
               style={{ display: 'block' }}
@@ -373,12 +425,10 @@ export default class Settings extends React.Component {
     this.setState({ settings });
   }
 
-  handleChangeFramerateMin(event, value) {
+  handleChangeFramerate(event, value) {
     const settings = this.state.settings;
-    if (settings.framerateMax <= value) {
-      settings.framerateMax = value
-    }
-    settings.framerateMin = value;
+    settings.framerateMin = value[0];
+    settings.framerateMax = value[1];
 
     this.setState({ settings });
   }
@@ -390,15 +440,6 @@ export default class Settings extends React.Component {
     this.setState({ settings });
   }
 
-  handleChangeFramerateMax(event, value) {
-    const settings = this.state.settings;
-    if (value <= settings.framerateMin) {
-      settings.framerateMin = value;
-    }
-    settings.framerateMax = value;
-
-    this.setState({ settings });
-  }
 
   handleChangeVideoCodec(event, key, value) {
     const settings = this.state.settings;

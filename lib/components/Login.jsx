@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import TextField from 'material-ui/TextField';
-import FlatButton from 'material-ui/FlatButton';
-import SettingsIcon from 'material-ui/svg-icons/action/settings';
+import TextField from '@material-ui/core/TextField';
+import { makeStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import SettingsIcon from '@material-ui/icons/Settings';
 import classnames from 'classnames';
 import randomString from 'random-string';
 import Logger from '../Logger';
@@ -34,6 +35,14 @@ export default class Login extends React.Component
 	{
 		const state = this.state;
 		const settings = state.settings;
+		// const useStyles = makeStyles((theme) => ({
+		// 	root: {
+		// 		'& > *': {
+		// 			margin: theme.spacing(1),
+		// 		},
+		// 	},
+		// }));
+		// const classes = useStyles();
 
 		return (
 			<TransitionAppear>
@@ -53,27 +62,27 @@ export default class Login extends React.Component
 								onClick={this.handleClickSettings.bind(this)}
 							/>
 						</div>
-
+						
 						<div className='form-container'>
 							<TextField
-								floatingLabelText='Your Name'
+								helperText='Your Name'
 								value={settings.display_name || ''}
 								errorText={state.errors.name}
 								fullWidth
 								onChange={this.handleChangeName.bind(this)}
 							/>
-							<FlatButton
-								label='Reset'
-								primary
-								style={{
-									display : 'table',
-									margin  : '20px auto 0 auto'
-								}}
-								onClick={this.handleClickReset.bind(this)}
-							/>
+							<div>
+								<Button 
+								color="primary" 
+								onClick={this.handleClickReset.bind(this)}>
+									Reset
+								</Button>
+							</div>
+							
 						</div>
+					
 					</form>
-
+					
 					<div className='submit-container'>
 						<div
 							className={classnames('submit-button', { disabled: !this._checkCanPlay() })}
