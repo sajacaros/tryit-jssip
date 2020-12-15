@@ -7,6 +7,8 @@ import MicOnIcon from 'material-ui/svg-icons/av/mic';
 import MicOffIcon from 'material-ui/svg-icons/av/mic-off';
 import CamIcon from 'material-ui/svg-icons/av/videocam';
 import CamOffIcon from 'material-ui/svg-icons/av/videocam-off';
+import CamIcon2 from 'material-ui/svg-icons/av/video-label';
+import ScreenShare from 'material-ui/svg-icons/communication/screen-share'
 import classnames from 'classnames';
 import JsSIP from 'jssip';
 import Logger from '../Logger';
@@ -42,6 +44,7 @@ export default class Session extends React.Component {
       remoteHold: false,
       audioMuted: false,
       videoMuted: false,
+      screen: false,
       canHold: false,
       ringing: false
     };
@@ -151,6 +154,20 @@ export default class Session extends React.Component {
                     onClick={this.handleVideoUnMute.bind(this)}
                   />
                 </Otherwise>
+              </Choose>
+              <Choose>
+                <When condition={!state.screen}>
+                  <ScreenShare className='control' 
+                    color={'#fff'} 
+                    onClick={this.handleScreenShare.bind(this)}>
+                  </ScreenShare>
+                </When>
+                <When condition={!state.screen}>
+                  <CamIcon2 className='control' 
+                    color={'#fff'} 
+                    onClick={this.handleCameraOn.bind(this)}>
+                  </CamIcon2>
+                </When>
               </Choose>
             </div>
           </div>
@@ -370,6 +387,18 @@ export default class Session extends React.Component {
 
     this.props.session.unmute({ video: true });
     this.setState({videoMuted: false});
+  }
+
+  handleScreenShare() {
+    logger.debug('handleScreenShare()');
+
+    this.setState({screen: true});
+  }
+
+  handleCameraOn() {
+    logger.debug('handleCameraon()');
+
+    this.setState({screen: false});
   }
 
   _handleRemoteStream(stream, audiooutputkey) {
