@@ -162,7 +162,7 @@ export default class Session extends React.Component {
                     onClick={this.handleScreenShare.bind(this)}>
                   </ScreenShare>
                 </When>
-                <When condition={!state.screen}>
+                <When condition={state.screen}>
                   <CamIcon2 className='control' 
                     color={'#fff'} 
                     onClick={this.handleCameraOn.bind(this)}>
@@ -337,6 +337,7 @@ export default class Session extends React.Component {
 
   componentWillUnmount() {
     logger.debug('componentWillUnmount()');
+    this.stopStream(this.refs.localVideo.srcObject);
 
     this._mounted = false;
     JsSIP.Utils.closeMediaStream(this._localClonedStream);
@@ -389,16 +390,57 @@ export default class Session extends React.Component {
     this.setState({videoMuted: false});
   }
 
+  stopStream(stream) {
+    stream.getTracks().forEach(t=>t.stop());
+  }
+
+  async changeStream(newStream, stopping=false) {
+    const originStream = this.refs.localVideo.srcObject;
+    this.props.session.connection.getSenders()
+    .filter(rtpSender=>rtpSender.track.kind == 'video')
+    .forEach(async rtpSender => {
+      try {
+        if(stopping && originStream) {
+          this.stopStream(originStream);
+        }
+        await rtpSender.replaceTrack(newStream.getVideoTracks()[0]);
+        console.log(`Replaced video track from ${originStream} to ${newStream}`);
+        this.refs.localVideo.srcObject = newStream;
+        if(stopping) {
+          this.setState({originStream: undefined});
+        } else {
+          this.setState({originStream: originStream});
+        }
+      } catch(e) {
+        console.log("Could not replace video track: " + e);
+        throw e;
+      }
+    });
+  }
+
   handleScreenShare() {
     logger.debug('handleScreenShare()');
-
-    this.setState({screen: true});
+    (async ()=> {
+      let screenStream;
+      try {
+        screenStream = await navigator.mediaDevices.getDisplayMedia(); 
+        await this.changeStream(screenStream);
+        this.setState({screen: true});
+      } catch(e) {
+        logger.debug('failed to change camera to screen, cause : ', e);
+        return;
+      }
+    })();
   }
 
   handleCameraOn() {
     logger.debug('handleCameraon()');
 
-    this.setState({screen: false});
+    this.changeStream(this.state.originStream, true)
+    .then(
+      ()=>this.setState({screen: false}), 
+      (e)=>logger.debug('failed to change screen->camera, cause : ', e)
+    );
   }
 
   _handleRemoteStream(stream, audiooutputkey) {
