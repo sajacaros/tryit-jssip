@@ -225,11 +225,13 @@ export default class Session extends React.Component {
       audioSource.connect(this.gainNode);
       this.gainNode.connect(audioDestination);
       this.gainNode.gain.setValueAtTime(0, this.audioCtx.currentTime);
-      const originalTrack = this._localClonedStream.getAudioTracks()[0];
-      this._localClonedStream.removeTrack(originalTrack);
+      // const originalTrack = this._localClonedStream.getAudioTracks()[0];
+      // this._localClonedStream.removeTrack(originalTrack);
       const filteredTrack = destinationStream.getAudioTracks()[0];
       logger.debug('filtered track : ', filteredTrack);
-      peerconnection.addTrack(filteredTrack);
+      this.changeStream(this._localClonedStream, filteredTrack, false, 'audio')
+      // peerconnection.removeTrack();
+      // peerconnection.addTrack(filteredTrack);
     }
 
     // If incoming all we already have the remote stream
@@ -434,25 +436,18 @@ export default class Session extends React.Component {
     stream.getTracks().forEach(t=>t.stop());
   }
 
-  async changeStream(newStream, stopping=false) {
-    const originStream = this.refs.localVideo.srcObject;
+  async changeStream(originStream, newTrack, stopping=false , kind='video') {
     this.props.session.connection.getSenders()
-    .filter(rtpSender=>rtpSender.track.kind == 'video')
+    .filter(rtpSender=>rtpSender.track.kind == kind)
     .forEach(async rtpSender => {
       try {
         if(stopping && originStream) {
           this.stopStream(originStream);
         }
-        await rtpSender.replaceTrack(newStream.getVideoTracks()[0]);
-        console.log(`Replaced video track from ${originStream} to ${newStream}`);
-        this.refs.localVideo.srcObject = newStream;
-        if(stopping) {
-          this.setState({originStream: undefined});
-        } else {
-          this.setState({originStream: originStream});
-        }
+        await rtpSender.replaceTrack(newTrack);
+        console.log(`Replaced track from ${originStream} to ${newTrack}`);
       } catch(e) {
-        console.log("Could not replace video track: " + e);
+        console.log("Could not replace track: " + e);
         throw e;
       }
     });
@@ -463,9 +458,11 @@ export default class Session extends React.Component {
     (async ()=> {
       let screenStream;
       try {
-        screenStream = await navigator.mediaDevices.getDisplayMedia(); 
-        await this.changeStream(screenStream);
-        this.setState({screen: true});
+        screenStream = await navigator.mediaDevices.getDisplayMedia();
+        const originStream = this.refs.localVideo.srcObject; 
+        await this.changeStream(originStream, screenStream.getVideoTracks()[0]);
+        this.refs.localVideo.srcObject = screenStream;
+        this.setState({screen: true, originStream});
       } catch(e) {
         logger.debug('failed to change camera to screen, cause : ', e);
         return;
@@ -476,9 +473,12 @@ export default class Session extends React.Component {
   handleCameraOn() {
     logger.debug('handleCameraon()');
 
-    this.changeStream(this.state.originStream, true)
+    this.changeStream(this.refs.localVideo.srcObject, this.state.originStream.getVideoTracks()[0], true)
     .then(
-      ()=>this.setState({screen: false}), 
+      ()=>{
+        this.refs.localVideo.srcObject = this.state.originStream;
+        this.setState({screen: false,originStream: undefined});
+      }, 
       (e)=>logger.debug('failed to change screen->camera, cause : ', e)
     );
   }
