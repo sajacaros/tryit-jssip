@@ -221,8 +221,8 @@ export default class Session extends React.Component {
       this.gainNode = audioCtx.createGain(); 
       const audioDestination = audioCtx.createMediaStreamDestination();
       const destinationStream = audioDestination.stream;
-      audioSource.connect(gainNode);
-      gainNode.connect(audioDestination);
+      audioSource.connect(this.gainNode);
+      this.gainNode.connect(audioDestination);
       const originalTrack = this._localClonedStream.getAudioTracks()[0];
       this._localClonedStream.removeTrack(originalTrack);
       const filteredTrack = destinationStream.getAudioTracks()[0];
