@@ -187,13 +187,15 @@ export default class Session extends React.Component {
     );
   }
 
-  getMicVolume() {
+  async getMicGain() {
+    const stream = await navigator.mediaDevices.getUserMedia({audio:true});
+    console.log('got audio stream', stream);
+
     const gainNode = this.audioCtx.createGain();
-    const stream = this.refs.localVideo.srcObject;
     const source = this.audioCtx.createMediaStreamSource(stream);
     source.connect(gainNode);
     gainNode.connect(this.audioCtx.destination);
-    return gainNode.gain.value;
+    return gainNode.gain;
   }
 
   componentDidMount() {
@@ -209,10 +211,11 @@ export default class Session extends React.Component {
     const bandwidth = parseInt(this.props.bandwidth);
     const audiooutputkey = this.props.audiooutputkey;
 
-    const micVolume = this.getMicVolume();
-    logger.debug(`micVolume : ${micVolume}`);
-    this.setState({micVolume:micVolume});
-
+    this.getMicGain().then(gain=>{
+      logger.debug(`micVolume : ${gain.value}`);
+      this.setState({micVolume:gain.value});
+    });
+    
     // Handle local stream
     if (localStream) {
       // Clone local stream
@@ -417,13 +420,11 @@ export default class Session extends React.Component {
   handleMicVolume(event, volume) {
     logger.debug(`handleMicVolume(${volume})`);
 
-    this.setState({micVolume: volume});
-
-    const stream = this.refs.localVideo.srcObject;
-    const source = this.audioCtx.createMediaStreamSource(stream);
-    source.connect(gainNode);
-    this.gainNode.connect(this.audioCtx.destination);
-    this.gainNode.gain.setValueAtTime(volume, this.audioCtx.currentTime);
+    this.getMicGain().then(gain=>{
+      gain.setValueAtTime(volume, this.audioCtx.currentTime);
+      this.setState({micVolume: volume});
+      logger.debug(`micVolume : ${gain.value}`);
+    });
   }
 
   stopStream(stream) {
