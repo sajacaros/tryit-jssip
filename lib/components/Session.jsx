@@ -218,20 +218,7 @@ export default class Session extends React.Component {
       }, 1000);
 
       this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      const audioSource = this.audioCtx.createMediaStreamSource(this._localClonedStream);
-      this.gainNode = this.audioCtx.createGain(); 
-      const audioDestination = this.audioCtx.createMediaStreamDestination();
-      const destinationStream = audioDestination.stream;
-      audioSource.connect(this.gainNode);
-      this.gainNode.connect(audioDestination);
-      this.gainNode.gain.setValueAtTime(0, this.audioCtx.currentTime);
-      // const originalTrack = this._localClonedStream.getAudioTracks()[0];
-      // this._localClonedStream.removeTrack(originalTrack);
-      const filteredTrack = destinationStream.getAudioTracks()[0];
-      logger.debug('filtered track : ', filteredTrack);
-      this.changeStream(this._localClonedStream, filteredTrack, false, 'audio')
-      // peerconnection.removeTrack();
-      // peerconnection.addTrack(filteredTrack);
+      this.gainNode = this.configGainNode(); 
     }
 
     // If incoming all we already have the remote stream
@@ -418,18 +405,23 @@ export default class Session extends React.Component {
     this.setState({videoMuted: false});
   }
 
+  configGainNode() {
+    const audioSource = this.audioCtx.createMediaStreamSource(this._localClonedStream);
+    const gainNode = this.audioCtx.createGain(); 
+    const audioDestination = this.audioCtx.createMediaStreamDestination();
+    const destinationStream = audioDestination.stream;
+    audioSource.connect(gainNode);
+    gainNode.connect(audioDestination);
+    const filteredTrack = destinationStream.getAudioTracks()[0];
+    this.changeStream(this._localClonedStream, filteredTrack, false, 'audio')
+    .then(()=>logger.debug('audio change success'), (e)=>logger.debug('audio change failed, cause : ', e));
+    return gainNode;
+  }
+
   handleMicVolume(event, volume) {
     logger.debug(`handleMicVolume(${volume}), gainNode : `, this.gainNode);
 
     this.gainNode.gain.setValueAtTime(volume, this.audioCtx.currentTime);
-
-    // var filteredTrack = outputStream.getAudioTracks()[0];
-    //     webRTCStream.addTrack(filteredTrack);
-    // this.getMicGain().then(gain=>{
-    //   gain.setValueAtTime(volume, this.audioCtx.currentTime);
-    //   this.setState({micVolume: volume});
-    //   logger.debug(`micVolume : ${gain.value}`);
-    // });
   }
 
   stopStream(stream) {
