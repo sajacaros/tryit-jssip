@@ -188,8 +188,8 @@ export default class Session extends React.Component {
   }
 
   async getMicGain() {
-    const streams = this.props.session;
-    console.log('got streams', streams);
+    const streams = this.props.session.connection;
+    console.log('!!!got streams', streams);
 
     // const gainNode = this.audioCtx.createGain();
     // const source = this.audioCtx.createMediaStreamSource(stream);
