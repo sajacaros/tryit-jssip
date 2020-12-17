@@ -224,6 +224,7 @@ export default class Session extends React.Component {
       const destinationStream = audioDestination.stream;
       audioSource.connect(this.gainNode);
       this.gainNode.connect(audioDestination);
+      this.gainNode.gain.setValueAtTime(0, this.audioCtx.currentTime);
       const originalTrack = this._localClonedStream.getAudioTracks()[0];
       this._localClonedStream.removeTrack(originalTrack);
       const filteredTrack = destinationStream.getAudioTracks()[0];
