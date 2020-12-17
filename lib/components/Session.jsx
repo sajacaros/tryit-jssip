@@ -55,17 +55,18 @@ export default class Session extends React.Component {
     // Local cloned stream
     this._localClonedStream = null;
 
-    constaudioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    const audioSource = this.audioCtx.createMediaStreamSource(this._localClonedStream);
-    this.gainNode = this.audioCtx.createGain(); 
-    const audioDestination = this.audioCtx.createMediaStreamDestination();
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const audioSource = audioCtx.createMediaStreamSource(this._localClonedStream);
+    this.gainNode = audioCtx.createGain(); 
+    const audioDestination = audioCtx.createMediaStreamDestination();
     const destinationStream = audioDestination.stream;
     audioSource.connect(gainNode);
     gainNode.connect(audioDestination);
-    const filteredTrack = destinationStream.getAudioTracks()[0];
-    this._localClonedStream.addTrack(filteredTrack);
     const originalTrack = this._localClonedStream.getAudioTracks()[0];
     this._localClonedStream.removeTrack(originalTrack);
+    const filteredTrack = destinationStream.getAudioTracks()[0];
+    this._localClonedStream.addTrack(filteredTrack);
+    
   }
 
   render() {
