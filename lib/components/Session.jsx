@@ -217,8 +217,6 @@ export default class Session extends React.Component {
           this.setState({ localHasVideo: true });
       }, 1000);
 
-      logger.debug('local stream!!!');
-
       this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       const audioSource = this.audioCtx.createMediaStreamSource(this._localClonedStream);
       this.gainNode = this.audioCtx.createGain(); 
@@ -229,6 +227,7 @@ export default class Session extends React.Component {
       const originalTrack = this._localClonedStream.getAudioTracks()[0];
       this._localClonedStream.removeTrack(originalTrack);
       const filteredTrack = destinationStream.getAudioTracks()[0];
+      logger.debug('filtered track : ', filteredTrack);
       this._localClonedStream.addTrack(filteredTrack);
     }
 
@@ -417,7 +416,7 @@ export default class Session extends React.Component {
   }
 
   handleMicVolume(event, volume) {
-    logger.debug(`handleMicVolume(${volume}), gainNode : ${this.gainNode}`);
+    logger.debug(`handleMicVolume(${volume}), gainNode : `, this.gainNode);
 
     this.gainNode.gain.setValueAtTime(volume, this.audioCtx.currentTime);
 
