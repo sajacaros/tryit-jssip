@@ -404,7 +404,7 @@ export default class Session extends React.Component {
   handleMicVolume(event, volume) {
     logger.debug(`handleMicVolume(${volume})`);
     
-    const gainNode = audioContext.createGain(); 
+    const gainNode = this.audioCtx.createGain(); 
     const audioSource = this.audioCtx.createMediaStreamSource(this._localClonedStream);
     const audioDestination = this.audioCtx.createMediaStreamDestination();
     audioSource.connect(gainNode);
