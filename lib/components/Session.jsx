@@ -229,8 +229,7 @@ export default class Session extends React.Component {
       this._localClonedStream.removeTrack(originalTrack);
       const filteredTrack = destinationStream.getAudioTracks()[0];
       logger.debug('filtered track : ', filteredTrack);
-      this.session.connection.
-      this.props.session.connection.addTrack(filteredTrack);
+      peerconnection.addTrack(filteredTrack);
     }
 
     // If incoming all we already have the remote stream
