@@ -56,6 +56,7 @@ export default class Session extends React.Component {
     this._localClonedStream = null;
 
     this.audioCtx = null;
+    this.gainNode = null;
   }
 
   render() {
@@ -220,11 +221,11 @@ export default class Session extends React.Component {
 
       this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       const audioSource = this.audioCtx.createMediaStreamSource(this._localClonedStream);
-      const gainNode = this.audioCtx.createGain(); 
+      this.gainNode = this.audioCtx.createGain(); 
       const audioDestination = this.audioCtx.createMediaStreamDestination();
       const destinationStream = audioDestination.stream;
-      audioSource.connect(gainNode);
-      gainNode.connect(audioDestination);
+      audioSource.connect(this.gainNode);
+      this.gainNode.connect(audioDestination);
       const originalTrack = this._localClonedStream.getAudioTracks()[0];
       this._localClonedStream.removeTrack(originalTrack);
       const filteredTrack = destinationStream.getAudioTracks()[0];
@@ -416,10 +417,9 @@ export default class Session extends React.Component {
   }
 
   handleMicVolume(event, volume) {
-    logger.debug(`handleMicVolume(${volume})`);
+    logger.debug(`handleMicVolume(${volume}), gainNode : ${this.gainNode}`);
 
-    const gainNode = this.audioCtx.createGain();
-    gainNode.gain.setValueAtTime(volume, this.audioCtx.currentTime);
+    this.gainNode.gain.setValueAtTime(volume, this.audioCtx.currentTime);
 
     // var filteredTrack = outputStream.getAudioTracks()[0];
     //     webRTCStream.addTrack(filteredTrack);
