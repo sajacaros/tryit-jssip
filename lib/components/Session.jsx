@@ -174,7 +174,7 @@ export default class Session extends React.Component {
               </Choose>
               <Slider
                 className='control'
-                value={state.micVolume||0}
+                value={state.micVolume||1}
                 onChange={this.handleMicVolume.bind(this)}
                 min={0}
                 max={1}
@@ -185,17 +185,6 @@ export default class Session extends React.Component {
         </div>
       </TransitionAppear>
     );
-  }
-
-  async getMicGain() {
-    const streams = this.props.session.connection;
-    console.log('!!!got streams', streams);
-
-    // const gainNode = this.audioCtx.createGain();
-    // const source = this.audioCtx.createMediaStreamSource(stream);
-    // source.connect(gainNode);
-    // gainNode.connect(this.audioCtx.destination);
-    // return gainNode.gain;
   }
 
   componentDidMount() {
@@ -210,11 +199,6 @@ export default class Session extends React.Component {
     const remoteStream = peerconnection.getRemoteStreams()[0];
     const bandwidth = parseInt(this.props.bandwidth);
     const audiooutputkey = this.props.audiooutputkey;
-
-    this.getMicGain().then(gain=>{
-      logger.debug(`micVolume : ${gain.value}`);
-      this.setState({micVolume:gain.value});
-    });
     
     // Handle local stream
     if (localStream) {
@@ -227,7 +211,7 @@ export default class Session extends React.Component {
       setTimeout(() => {
         if (!this._mounted)
           return;
-
+        
         if (localStream.getVideoTracks()[0])
           this.setState({ localHasVideo: true });
       }, 1000);
@@ -419,12 +403,18 @@ export default class Session extends React.Component {
 
   handleMicVolume(event, volume) {
     logger.debug(`handleMicVolume(${volume})`);
-
-    this.getMicGain().then(gain=>{
-      gain.setValueAtTime(volume, this.audioCtx.currentTime);
-      this.setState({micVolume: volume});
-      logger.debug(`micVolume : ${gain.value}`);
-    });
+    
+    const gainNode = audioContext.createGain(); 
+    const audioSource = this.audioCtx.createMediaStreamSource(this._localClonedStream);
+    const audioDestination = this.audioCtx.createMediaStreamDestination();
+    audioSource.connect(gainNode);
+    gainNode.connect(audioDestination);
+    gainNode.gain.value = volume;
+    // this.getMicGain().then(gain=>{
+    //   gain.setValueAtTime(volume, this.audioCtx.currentTime);
+    //   this.setState({micVolume: volume});
+    //   logger.debug(`micVolume : ${gain.value}`);
+    // });
   }
 
   stopStream(stream) {
