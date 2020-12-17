@@ -13,6 +13,7 @@ import classnames from 'classnames';
 import JsSIP from 'jssip';
 import Logger from '../Logger';
 import TransitionAppear from './TransitionAppear';
+import Slider from 'material-ui/Slider';
 
 const logger = new Logger('Session');
 
@@ -53,6 +54,8 @@ export default class Session extends React.Component {
     this._mounted = false;
     // Local cloned stream
     this._localClonedStream = null;
+
+    this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   }
 
   render() {
@@ -169,6 +172,14 @@ export default class Session extends React.Component {
                   </CamIcon2>
                 </When>
               </Choose>
+              <Slider
+                className='control'
+                value={state.micVolume||0}
+                onChange={this.handleMicVolume.bind(this)}
+                min={0}
+                max={1}
+                step={0.1}
+              />
             </div>
           </div>
         </div>
@@ -188,6 +199,15 @@ export default class Session extends React.Component {
     const remoteStream = peerconnection.getRemoteStreams()[0];
     const bandwidth = parseInt(this.props.bandwidth);
     const audiooutputkey = this.props.audiooutputkey;
+
+    const gainNode = audioCtx.createGain();
+    const stream = this.refs.localVideo.srcObject;
+    const source = this.audioCtx.createMediaStreamSource(stream);
+    source.connect(gainNode);
+    gainNode.connect(this.audioCtx.destination);
+    const micVolume = gainNode.gain.value;
+    logger.debug(`micVolume : ${micVolume}`);
+    this.setState({micVolue:micVolume});
 
     // Handle local stream
     if (localStream) {
@@ -388,6 +408,18 @@ export default class Session extends React.Component {
 
     this.props.session.unmute({ video: true });
     this.setState({videoMuted: false});
+  }
+
+  handleMicVolume(event, volume) {
+    logger.debug(`handleMicVolume(${volume})`);
+
+    this.setState({micVolume: volume});
+
+    const stream = this.refs.localVideo.srcObject;
+    const source = this.audioCtx.createMediaStreamSource(stream);
+    source.connect(gainNode);
+    this.gainNode.connect(this.audioCtx.destination);
+    this.gainNode.gain.setValueAtTime(volume, this.audioCtx.currentTime);
   }
 
   stopStream(stream) {
