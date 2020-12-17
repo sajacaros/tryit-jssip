@@ -55,18 +55,7 @@ export default class Session extends React.Component {
     // Local cloned stream
     this._localClonedStream = null;
 
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    const audioSource = audioCtx.createMediaStreamSource(this._localClonedStream);
-    this.gainNode = audioCtx.createGain(); 
-    const audioDestination = audioCtx.createMediaStreamDestination();
-    const destinationStream = audioDestination.stream;
-    audioSource.connect(gainNode);
-    gainNode.connect(audioDestination);
-    const originalTrack = this._localClonedStream.getAudioTracks()[0];
-    this._localClonedStream.removeTrack(originalTrack);
-    const filteredTrack = destinationStream.getAudioTracks()[0];
-    this._localClonedStream.addTrack(filteredTrack);
-    
+    this.gainNode = null;
   }
 
   render() {
@@ -226,6 +215,18 @@ export default class Session extends React.Component {
         if (localStream.getVideoTracks()[0])
           this.setState({ localHasVideo: true });
       }, 1000);
+
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const audioSource = audioCtx.createMediaStreamSource(this._localClonedStream);
+      this.gainNode = audioCtx.createGain(); 
+      const audioDestination = audioCtx.createMediaStreamDestination();
+      const destinationStream = audioDestination.stream;
+      audioSource.connect(gainNode);
+      gainNode.connect(audioDestination);
+      const originalTrack = this._localClonedStream.getAudioTracks()[0];
+      this._localClonedStream.removeTrack(originalTrack);
+      const filteredTrack = destinationStream.getAudioTracks()[0];
+      this._localClonedStream.addTrack(filteredTrack);
     }
 
     // If incoming all we already have the remote stream
