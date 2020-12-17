@@ -187,6 +187,15 @@ export default class Session extends React.Component {
     );
   }
 
+  getMicVolume() {
+    const gainNode = this.audioCtx.createGain();
+    const stream = this.refs.localVideo.srcObject;
+    const source = this.audioCtx.createMediaStreamSource(stream);
+    source.connect(gainNode);
+    gainNode.connect(this.audioCtx.destination);
+    return gainNode.gain.value;
+  }
+
   componentDidMount() {
     logger.debug('componentDidMount()');
 
@@ -200,14 +209,9 @@ export default class Session extends React.Component {
     const bandwidth = parseInt(this.props.bandwidth);
     const audiooutputkey = this.props.audiooutputkey;
 
-    const gainNode = audioCtx.createGain();
-    const stream = this.refs.localVideo.srcObject;
-    const source = this.audioCtx.createMediaStreamSource(stream);
-    source.connect(gainNode);
-    gainNode.connect(this.audioCtx.destination);
-    const micVolume = gainNode.gain.value;
+    const micVolume = this.getMicVolume();
     logger.debug(`micVolume : ${micVolume}`);
-    this.setState({micVolue:micVolume});
+    this.setState({micVolume:micVolume});
 
     // Handle local stream
     if (localStream) {
