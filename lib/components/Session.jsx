@@ -188,14 +188,14 @@ export default class Session extends React.Component {
   }
 
   async getMicGain() {
-    const stream = await navigator.mediaDevices.getUserMedia({audio:true});
-    console.log('got audio stream', stream);
+    const streams = this.props.session.connection.getLocalStreams();
+    console.log('got streams', streams);
 
-    const gainNode = this.audioCtx.createGain();
-    const source = this.audioCtx.createMediaStreamSource(stream);
-    source.connect(gainNode);
-    gainNode.connect(this.audioCtx.destination);
-    return gainNode.gain;
+    // const gainNode = this.audioCtx.createGain();
+    // const source = this.audioCtx.createMediaStreamSource(stream);
+    // source.connect(gainNode);
+    // gainNode.connect(this.audioCtx.destination);
+    // return gainNode.gain;
   }
 
   componentDidMount() {
