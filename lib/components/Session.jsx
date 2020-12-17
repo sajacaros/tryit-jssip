@@ -418,8 +418,8 @@ export default class Session extends React.Component {
 
     this.gainNode.gain.value = volume;
 
-    var filteredTrack = outputStream.getAudioTracks()[0];
-        webRTCStream.addTrack(filteredTrack);
+    // var filteredTrack = outputStream.getAudioTracks()[0];
+    //     webRTCStream.addTrack(filteredTrack);
     // this.getMicGain().then(gain=>{
     //   gain.setValueAtTime(volume, this.audioCtx.currentTime);
     //   this.setState({micVolume: volume});
