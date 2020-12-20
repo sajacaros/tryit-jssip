@@ -159,7 +159,7 @@ export default class Session extends React.Component {
                   />
                 </Otherwise>
               </Choose>
-              {/* <Choose>
+              <Choose>
                 <When condition={!state.screen}>
                   <ScreenShare className='control' 
                     color={'#fff'} 
@@ -172,7 +172,7 @@ export default class Session extends React.Component {
                     onClick={this.handleCameraOn.bind(this)}>
                   </CamIcon2>
                 </When>
-              </Choose> */}
+              </Choose>
               <Slider
                 className='control'
                 value={state.micVolume||1}
