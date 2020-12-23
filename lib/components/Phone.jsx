@@ -110,7 +110,6 @@ function transformSdp(sdp, { audioCodec, videoCodec, bandwidth }) {
     media.rtcpFb = media.rtcpFb.filter(m => rtpIndexes.includes(m.payload));
     // media.protocol = 'RTP/AVP'
   }
-  logger.debug('bandwidth : ', bandwidth);
   logger.debug('sdp : ', sdp);
 }
 
@@ -236,6 +235,7 @@ export default class Phone extends React.Component {
     if (settings.socket['via_transport'] !== 'auto')
       socket['via_transport'] = settings.socket['via_transport'];
 
+    logger.debug('settings.pcConfig : ', settings.pcConfig);
     try {
       this._ua = new JsSIP.UA(
         {
@@ -248,7 +248,8 @@ export default class Phone extends React.Component {
           'authorization_user': settings.authorization_user,
           'instance_id': settings.instance_id,
           'session_timers': settings.session_timers,
-          'use_preloaded_route': settings.use_preloaded_route
+          'use_preloaded_route': settings.use_preloaded_route,
+          'pcConfig': settings.pcConfig
         });
 
       // TODO: For testing.
