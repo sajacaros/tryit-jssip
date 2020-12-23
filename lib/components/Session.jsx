@@ -19,7 +19,7 @@ const logger = new Logger('Session');
 
 function changeBandwidth(connection, bandwidth) {
   connection.getSenders()
-    .filter(sender => sender.track.kind==='video')
+    .filter(sender => sender.track && sender.track.kind==='video')
     .forEach(sender => {
       logger.debug('sender bandwidth setting, sender : ', sender);
       const parameters = sender.getParameters();
@@ -430,7 +430,7 @@ export default class Session extends React.Component {
 
   async changeStream(originStream, newTrack, stopping=false , kind='video') {
     this.props.session.connection.getSenders()
-    .filter(rtpSender=>rtpSender.track.kind == kind)
+    .filter(rtpSender=>rtpSender.track && rtpSender.track.kind === kind)
     .forEach(async rtpSender => {
       try {
         if(stopping && originStream) {

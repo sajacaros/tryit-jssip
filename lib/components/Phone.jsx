@@ -14,7 +14,8 @@ import Logo from './Logo';
 import Dialer from './Dialer';
 import Session from './Session';
 import Incoming from './Incoming';
-import * as sdpTransform from 'sdp-transform';
+import * as constraintsUtil from '../common/constraintsUtil';
+import * as sdpUtil from '../common/sdpUtil';
 
 // TODO: For testing.
 window.jssip = JsSIP;
@@ -28,11 +29,9 @@ const logger = new Logger('Phone');
 
 const sdpLog = (sdp) => {
   logger.debug('sdp : ', sdp);
-  // logger.debug('sdp originator : ', originator);
-  // logger.debug('sdp type : ', type);
-  // logger.debug('sdp sdp : ', sdp);
 };
 
+<<<<<<< HEAD
 const qvgaConstraints = { width: { exact: 320 }, height: { exact: 240 } };
 
 const vgaConstraints = { width: { exact: 640 }, height: { exact: 480 } };
@@ -129,6 +128,8 @@ function defineAudioConstraints({ audioinputkey }) {
   return audioConstraints;
 }
 
+=======
+>>>>>>> 0efafea79b2ff2e65caf699f521f93b624a88971
 export default class Phone extends React.Component {
   constructor(props) {
     super(props);
@@ -399,9 +400,9 @@ export default class Phone extends React.Component {
       session.on('sdp', (data) => {
         sdpLog(data);
         if (data.originator === 'local') {
-          const parsedSdp = sdpTransform.parse(data.sdp);
-          transformSdp(parsedSdp, this.props.settings);
-          data.sdp = sdpTransform.write(parsedSdp);
+          const parsedSdp = sdpUtil.parse(data.sdp);
+          sdpUtil.transformSdp(parsedSdp, this.props.settings);
+          data.sdp = sdpUtil.write(parsedSdp);
           // logger.debug("386 tranformed sdp : ", data.sdp);
         }
       });
@@ -454,8 +455,8 @@ export default class Phone extends React.Component {
   handleOutgoingCall(uri) {
     logger.debug('handleOutgoingCall() [uri:"%s"]', uri);
 
-    const videoConstraints = defineVideoConstraints(this.props.settings);
-    const audioConstraints = defineAudioConstraints(this.props.settings);
+    const videoConstraints = constraintsUtil.defineVideoConstraints(this.props.settings);
+    const audioConstraints = constraintsUtil.defineAudioConstraints(this.props.settings);
 
     const session = this._ua.call(uri,
       {
@@ -507,9 +508,9 @@ export default class Phone extends React.Component {
     session.on('sdp', (data) => {
       sdpLog(data);
       if (data.originator === 'local') {
-        const parsedSdp = sdpTransform.parse(data.sdp);
-        transformSdp(parsedSdp, this.props.settings);
-        data.sdp = sdpTransform.write(parsedSdp);
+        const parsedSdp = sdpUtil.parse(data.sdp);
+        sdpUtil.transformSdp(parsedSdp, this.props.settings);
+        data.sdp = sdpUtil.write(parsedSdp);
         // logger.debug("501 tranformed sdp : ", data.sdp);
       }
     });
@@ -521,8 +522,8 @@ export default class Phone extends React.Component {
     logger.debug('handleAnswerIncoming()');
 
     const session = this.state.incomingSession;
-    const videoConstraints = defineVideoConstraints(this.props.settings);
-    const audioConstraints = defineAudioConstraints(this.props.settings);
+    const videoConstraints = constraintsUtil.defineVideoConstraints(this.props.settings);
+    const audioConstraints = constraintsUtil.defineAudioConstraints(this.props.settings);
 
     session.answer(
       {
