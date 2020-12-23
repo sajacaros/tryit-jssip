@@ -10,27 +10,10 @@ import clone from 'clone';
 import Logger from '../Logger';
 import TransitionAppear from './TransitionAppear';
 import Slider from 'material-ui/Slider';
+import {groupingConnectedDevices} from '../common/deviceCheck';
+import DeviceSelector from './DeviceSelector'
 
 const logger = new Logger('Settings');
-
-function groupingConnectedDevices(callback) {  
-  (async() => {
-    let devicesGroupByKind;
-    try {
-      await navigator.mediaDevices.getUserMedia({audio:true,video:true});
-      const devices = await navigator.mediaDevices.enumerateDevices();
-      devicesGroupByKind = devices.reduce(
-        (group, device) => {
-          (group[device['kind']] = group[device['kind']] || []).push(device);
-          return group;
-        }, {});
-      } catch(e) {
-        logger.debug(e);
-      return;
-    }
-    callback(devicesGroupByKind);
-  })();
-}
 
 export default class Settings extends React.Component {
   constructor(props) {
@@ -73,55 +56,9 @@ export default class Settings extends React.Component {
 
   render() {
     const settings = this.state.settings;
-    let audioinput;
-    let audiooutput;
-    let videoinput;
-    let audioinputSelector;
-    let audiooutputSelector;
-    let videoinputSelector;
-    // if (this.state.deviceInit) {
-      audioinput = this.state.audioinput || [];
-      audiooutput = this.state.audiooutput || [];
-      videoinput = this.state.videoinput || [];
-
-      audioinputSelector = (
-        <div className='item'>
-          <SelectField
-            floatingLabelText='audioinput'
-            value={settings.audioinputkey}
-            fullWidth
-            onChange={this.handleChangeAudioinput.bind(this)}
-          >
-            {audioinput.map(d => {
-              return (<MenuItem value={d.deviceId} key={d.deviceId} primaryText={d.label} />)
-            })}
-          </SelectField></div>);
-
-      audiooutputSelector = (
-        <div className='item'>
-          <SelectField
-            floatingLabelText='audiooutput'
-            value={settings.audiooutputkey}
-            fullWidth
-            onChange={this.handleChangeAudiooutput.bind(this)}
-          >
-            {audiooutput.map(d => {
-              return (<MenuItem value={d.deviceId} key={d.deviceId} primaryText={d.label} />)
-            })}
-          </SelectField></div>);
-      videoinputSelector = (
-        <div className='item'>
-          <SelectField
-            floatingLabelText='videoinput'
-            value={settings.videoinputkey}
-            fullWidth
-            onChange={this.handleChangeVideoinput.bind(this)}
-          >
-            {videoinput.map(d => {
-              return (<MenuItem value={d.deviceId} key={d.deviceId} primaryText={d.label} />)
-            })}
-          </SelectField></div>);
-    // }
+    let audioinput = this.state.audioinput || [];;
+    let audiooutput = this.state.audiooutput || [];
+    let videoinput = this.state.videoinput || [];
     return (
       <TransitionAppear duration={250}>
         <div data-component='Settings'>
@@ -174,9 +111,24 @@ export default class Settings extends React.Component {
           </div>
 
 
-          {audioinputSelector}
-          {audiooutputSelector}
-          {videoinputSelector}
+          <DeviceSelector 
+            inputLabel='audioinput'
+            inputKey={settings.audioinputkey} 
+            handleChangeDevice={this.handleChangeAudioinput.bind(this)}
+            input={audioinput}
+          />
+          <DeviceSelector 
+            inputLabel='audiooutput'
+            inputKey={settings.audiooutputkey} 
+            handleChangeDevice={this.handleChangeAudiooutput.bind(this)}
+            input={audiooutput}
+          />
+          <DeviceSelector 
+            inputLabel='videoinput'
+            inputKey={settings.videoinputkey} 
+            handleChangeDevice={this.handleChangeVideoinput.bind(this)}
+            input={videoinput}
+          />
 
           <div className='item'>
             <SelectField
