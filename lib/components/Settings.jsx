@@ -109,27 +109,30 @@ export default class Settings extends React.Component {
               <MenuItem value='wss' primaryText='WSS' />
             </SelectField>
           </div>
-
-
-          <DeviceSelector 
-            inputLabel='audioinput'
-            inputKey={settings.audioinputkey} 
-            handleChangeDevice={this.handleChangeAudioinput.bind(this)}
-            input={audioinput}
-          />
-          <DeviceSelector 
-            inputLabel='audiooutput'
-            inputKey={settings.audiooutputkey} 
-            handleChangeDevice={this.handleChangeAudiooutput.bind(this)}
-            input={audiooutput}
-          />
-          <DeviceSelector 
-            inputLabel='videoinput'
-            inputKey={settings.videoinputkey} 
-            handleChangeDevice={this.handleChangeVideoinput.bind(this)}
-            input={videoinput}
-          />
-
+          <div className='item'>
+            <DeviceSelector 
+              inputLabel='audioinput'
+              inputKey={settings.audioinputkey} 
+              handleChangeDevice={this.handleChangeAudioinput.bind(this)}
+              input={audioinput}
+            />
+          </div>
+          <div className='item'>
+            <DeviceSelector 
+              inputLabel='audiooutput'
+              inputKey={settings.audiooutputkey} 
+              handleChangeDevice={this.handleChangeAudiooutput.bind(this)}
+              input={audiooutput}
+            />
+          </div>
+          <div className='item'>
+            <DeviceSelector 
+              inputLabel='videoinput'
+              inputKey={settings.videoinputkey} 
+              handleChangeDevice={this.handleChangeVideoinput.bind(this)}
+              input={videoinput}
+            />
+          </div>
           <div className='item'>
             <SelectField
               floatingLabelText='resolution'

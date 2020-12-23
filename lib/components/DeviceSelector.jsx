@@ -10,7 +10,7 @@ export default class DeviceSelector extends Component {
 
   render() {
     return (
-      <div className='item'>
+      
         <SelectField
           floatingLabelText={this.props.inputLabel}
           value={this.props.inputKey}
@@ -21,7 +21,6 @@ export default class DeviceSelector extends Component {
             return (<MenuItem value={d.deviceId} key={d.deviceId} primaryText={d.label} />)
           })}
         </SelectField>
-      </div>
     )
   }
 }
