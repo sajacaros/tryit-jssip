@@ -150,8 +150,7 @@ export default class Phone extends React.Component {
           'authorization_user': settings.authorization_user,
           'instance_id': settings.instance_id,
           'session_timers': settings.session_timers,
-          'use_preloaded_route': settings.use_preloaded_route,
-          'pcConfig': settings.pcConfig
+          'use_preloaded_route': settings.use_preloaded_route
         });
 
       // TODO: For testing.
