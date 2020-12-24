@@ -353,15 +353,28 @@ export default class Phone extends React.Component {
     this.props.onExit();
   }
 
+  getIceServers({stun, turn}) {
+    const iceServers = [];
+    if(stun && stun.urls && stun.urls !=='') {
+      iceServers.push(stun);
+    }
+    if(turn && turn.urls && turn.urls !=='') {
+      iceServers.push(turn);
+    }
+    logger.debug('ice servers : ', iceServers);
+    return iceServers;
+  }
+
   handleOutgoingCall(uri) {
     logger.debug('handleOutgoingCall() [uri:"%s"]', uri);
 
     const videoConstraints = constraintsUtil.defineVideoConstraints(this.props.settings);
     const audioConstraints = constraintsUtil.defineAudioConstraints(this.props.settings);
 
+    const iceServers = this.getIceServers(this.props.settings);
     const session = this._ua.call(uri,
       {
-        pcConfig: this.props.settings.pcConfig || { iceServers: [] },
+        pcConfig: { iceServers },
         mediaConstraints:
         {
           audio: audioConstraints,
@@ -426,9 +439,12 @@ export default class Phone extends React.Component {
     const videoConstraints = constraintsUtil.defineVideoConstraints(this.props.settings);
     const audioConstraints = constraintsUtil.defineAudioConstraints(this.props.settings);
 
+    iceServers = this.getIceServers(this.props.settings);
     session.answer(
       {
-        pcConfig: this.props.settings.pcConfig || { iceServers: [] },
+        pcConfig: {
+          iceServers
+        },
         mediaConstraints:
         {
           video: videoConstraints,

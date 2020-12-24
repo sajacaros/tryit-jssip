@@ -94,7 +94,6 @@ export default class Settings extends React.Component {
               onChange={this.handleChangeWebSocketUri.bind(this)}
             />
           </div>
-
           <div className='item'>
             <SelectField
               floatingLabelText='Via transport'
@@ -108,6 +107,44 @@ export default class Settings extends React.Component {
               <MenuItem value='ws' primaryText='WS' />
               <MenuItem value='wss' primaryText='WSS' />
             </SelectField>
+          </div>
+          <div className='item'>
+            <TextField
+              floatingLabelText='Stun Server URI'
+              value={settings.stun.urls || ''}
+              floatingLabelFixed
+              fullWidth
+              onChange={this.handleChangeStunUri.bind(this)}
+            />
+          </div>
+          <div className='item'>
+            <TextField
+              floatingLabelText='Turn Server URI'
+              value={settings.turn.urls || ''}
+              floatingLabelFixed
+              fullWidth
+              onChange={this.handleChangeTurnUri.bind(this)}
+            />
+          </div>
+
+          <div className='item'>
+            <TextField
+              floatingLabelText='Turn Username'
+              value={settings.turn.username || ''}
+              floatingLabelFixed
+              fullWidth
+              onChange={this.handleChangeTurnUsername.bind(this)}
+            />
+          </div>
+
+          <div className='item'>
+            <TextField
+              floatingLabelText='Turn Credential'
+              value={settings.turn.credential || ''}
+              floatingLabelFixed
+              fullWidth
+              onChange={this.handleChangeTurnCredential.bind(this)}
+            />
           </div>
           <div className='item'>
             <DeviceSelector 
@@ -289,6 +326,38 @@ export default class Settings extends React.Component {
 
     settings.socket['via_transport'] = value;
     this.setState({ settings });
+  }
+
+  handleChangeStunUri(event) {
+    const settings = this.state.settings;
+
+    settings.stun.urls = event.target.value;
+    this.setState({settings});
+  }
+
+  handleChangeTurnUri(event) {
+    const settings = this.state.settings;
+    settings.turn.urls = event.target.value;
+    if(event.target.value === '') {
+      settings.turn.username = '';
+      settings.turn.credential = '';  
+    }
+    
+    this.setState({settings});
+  }
+
+  handleChangeTurnUsername(event) {
+    const settings = this.state.settings;
+
+    settings.turn.username = event.target.value;
+    this.setState({settings});
+  }
+
+  handleChangeTurnCredential(event) {
+    const settings = this.state.settings;
+
+    settings.turn.credential = event.target.value;
+    this.setState({settings});
   }
 
   handleChangeAudioinput(event, key, value) {
