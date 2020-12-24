@@ -111,26 +111,26 @@ export default class Settings extends React.Component {
           <div className='item'>
             <TextField
               floatingLabelText='Stun Server URI'
-              value={settings.stun.urls || ''}
+              value={settings.stun?settings.stun.urls || '':''}
               floatingLabelFixed
               fullWidth
-              onChange={this.handleChangeStunUri.bind(this)}
+              onChange={this.handleChangeStunUrls.bind(this)}
             />
           </div>
           <div className='item'>
             <TextField
               floatingLabelText='Turn Server URI'
-              value={settings.turn.urls || ''}
+              value={settings.turn? settings.turn.urls || '':''}
               floatingLabelFixed
               fullWidth
-              onChange={this.handleChangeTurnUri.bind(this)}
+              onChange={this.handleChangeTurnUrls.bind(this)}
             />
           </div>
 
           <div className='item'>
             <TextField
               floatingLabelText='Turn Username'
-              value={settings.turn.username || ''}
+              value={settings.turn?settings.turn.username || '':''}
               floatingLabelFixed
               fullWidth
               onChange={this.handleChangeTurnUsername.bind(this)}
@@ -140,7 +140,7 @@ export default class Settings extends React.Component {
           <div className='item'>
             <TextField
               floatingLabelText='Turn Credential'
-              value={settings.turn.credential || ''}
+              value={settings.turn?settings.turn.credential || '':''}
               floatingLabelFixed
               fullWidth
               onChange={this.handleChangeTurnCredential.bind(this)}
@@ -328,14 +328,14 @@ export default class Settings extends React.Component {
     this.setState({ settings });
   }
 
-  handleChangeStunUri(event) {
+  handleChangeStunUrls(event) {
     const settings = this.state.settings;
 
     settings.stun.urls = event.target.value;
     this.setState({settings});
   }
 
-  handleChangeTurnUri(event) {
+  handleChangeTurnUrls(event) {
     const settings = this.state.settings;
     settings.turn.urls = event.target.value;
     if(event.target.value === '') {
