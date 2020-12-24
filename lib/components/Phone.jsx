@@ -137,7 +137,6 @@ export default class Phone extends React.Component {
     if (settings.socket['via_transport'] !== 'auto')
       socket['via_transport'] = settings.socket['via_transport'];
 
-    logger.debug('settings.pcConfig : ', settings.pcConfig);
     try {
       this._ua = new JsSIP.UA(
         {
@@ -373,7 +372,10 @@ export default class Phone extends React.Component {
     const iceServers = this.getIceServers(this.props.settings);
     const session = this._ua.call(uri,
       {
-        pcConfig: { iceServers },
+        pcConfig: { 
+          iceServers,
+          rtcpMuxPolicy : 'negotiate'
+        },
         mediaConstraints:
         {
           audio: audioConstraints,
@@ -442,7 +444,8 @@ export default class Phone extends React.Component {
     session.answer(
       {
         pcConfig: {
-          iceServers
+          iceServers,
+          rtcpMuxPolicy : 'negotiate'
         },
         mediaConstraints:
         {
