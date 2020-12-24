@@ -111,7 +111,7 @@ export default class Settings extends React.Component {
           <div className='item'>
             <TextField
               floatingLabelText='Stun Server URI'
-              value={settings.stun?settings.stun.urls || '':''}
+              value={settings.stun.urls || ''}
               floatingLabelFixed
               fullWidth
               onChange={this.handleChangeStunUrls.bind(this)}
@@ -120,7 +120,7 @@ export default class Settings extends React.Component {
           <div className='item'>
             <TextField
               floatingLabelText='Turn Server URI'
-              value={settings.turn? settings.turn.urls || '':''}
+              value={settings.turn.urls || ''}
               floatingLabelFixed
               fullWidth
               onChange={this.handleChangeTurnUrls.bind(this)}
@@ -130,7 +130,7 @@ export default class Settings extends React.Component {
           <div className='item'>
             <TextField
               floatingLabelText='Turn Username'
-              value={settings.turn?settings.turn.username || '':''}
+              value={settings.turn.username || ''}
               floatingLabelFixed
               fullWidth
               onChange={this.handleChangeTurnUsername.bind(this)}
@@ -140,7 +140,7 @@ export default class Settings extends React.Component {
           <div className='item'>
             <TextField
               floatingLabelText='Turn Credential'
-              value={settings.turn?settings.turn.credential || '':''}
+              value={settings.turn.credential || ''}
               floatingLabelFixed
               fullWidth
               onChange={this.handleChangeTurnCredential.bind(this)}
