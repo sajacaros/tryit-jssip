@@ -370,6 +370,7 @@ export default class Phone extends React.Component {
     const audioConstraints = constraintsUtil.defineAudioConstraints(this.props.settings);
 
     const iceServers = this.getIceServers(this.props.settings);
+    logger.debug('iceserver : ', iceServers);
     const session = this._ua.call(uri,
       {
         pcConfig: { 
@@ -441,6 +442,7 @@ export default class Phone extends React.Component {
     const audioConstraints = constraintsUtil.defineAudioConstraints(this.props.settings);
 
     iceServers = this.getIceServers(this.props.settings);
+    logger.debug('iceserver : ', iceServers);
     session.answer(
       {
         pcConfig: {
