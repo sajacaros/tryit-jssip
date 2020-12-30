@@ -441,12 +441,12 @@ export default class Phone extends React.Component {
     const videoConstraints = constraintsUtil.defineVideoConstraints(this.props.settings);
     const audioConstraints = constraintsUtil.defineAudioConstraints(this.props.settings);
 
-    iceServers = this.getIceServers(this.props.settings);
+    iceServer = this.getIceServers(this.props.settings);
     logger.debug('iceserver : ', iceServers);
     session.answer(
       {
         pcConfig: {
-          iceServers: iceServers,
+          iceServers: iceServer,
           rtcpMuxPolicy : 'negotiate'
         },
         mediaConstraints:
