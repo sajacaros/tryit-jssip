@@ -452,7 +452,7 @@ export default class Phone extends React.Component {
           iceServers: [
             { urls: [ 'stun:stun.l.google.com:19302' ] }
           ],
-          rtcpMuxPolicy : 'negotiate'
+          // rtcpMuxPolicy : 'negotiate'
         },
         mediaConstraints:
         {
