@@ -374,7 +374,9 @@ export default class Phone extends React.Component {
     const session = this._ua.call(uri,
       {
         pcConfig: { 
-          iceServers,
+          iceServers: [
+            { urls: [ 'stun:stun.l.google.com:19302' ] }
+          ],
           rtcpMuxPolicy : 'negotiate'
         },
         mediaConstraints:
@@ -446,7 +448,9 @@ export default class Phone extends React.Component {
     session.answer(
       {
         pcConfig: {
-          iceServers: iceServer,
+          iceServers: [
+            { urls: [ 'stun:stun.l.google.com:19302' ] }
+          ],
           rtcpMuxPolicy : 'negotiate'
         },
         mediaConstraints:
