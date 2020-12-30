@@ -369,17 +369,15 @@ export default class Phone extends React.Component {
     const videoConstraints = constraintsUtil.defineVideoConstraints(this.props.settings);
     const audioConstraints = constraintsUtil.defineAudioConstraints(this.props.settings);
 
-    const iceServers = this.getIceServers(this.props.settings);
-    logger.debug('iceserver : ', iceServers);
+    // const iceServers = this.getIceServers(this.props.settings);
+    // logger.debug('iceserver : ', iceServers);
     const session = this._ua.call(uri,
       {
-        pcConfig: { iceServers: [{ urls: [ 'stun:stun.l.google.com:19302' ] }] }, 
-        // { 
-        //   iceServers: [
-        //     { urls: [ 'stun:stun.l.google.com:19302' ] }
-        //   ],
-        //   rtcpMuxPolicy : 'negotiate'
-        // },
+        pcConfig: { 
+          iceServers: [
+            { urls: [ 'stun:stun.l.google.com:19302' ] }
+          ] 
+        },
         mediaConstraints:
         {
           audio: audioConstraints,
@@ -444,15 +442,14 @@ export default class Phone extends React.Component {
     const videoConstraints = constraintsUtil.defineVideoConstraints(this.props.settings);
     const audioConstraints = constraintsUtil.defineAudioConstraints(this.props.settings);
 
-    iceServer = this.getIceServers(this.props.settings);
-    logger.debug('iceserver : ', iceServers);
+    // iceServer = this.getIceServers(this.props.settings);
+    // logger.debug('iceserver : ', iceServers);
     session.answer(
       {
         pcConfig: {
           iceServers: [
             { urls: [ 'stun:stun.l.google.com:19302' ] }
-          ],
-          // rtcpMuxPolicy : 'negotiate'
+          ]
         },
         mediaConstraints:
         {
