@@ -373,7 +373,7 @@ export default class Phone extends React.Component {
     logger.debug('iceserver : ', iceServers);
     const session = this._ua.call(uri,
       {
-        pcConfig: { iceServers: [] }, 
+        pcConfig: { iceServers: [{ urls: [ 'stun:stun.l.google.com:19302' ] }] }, 
         // { 
         //   iceServers: [
         //     { urls: [ 'stun:stun.l.google.com:19302' ] }
