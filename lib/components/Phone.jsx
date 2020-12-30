@@ -444,7 +444,7 @@ export default class Phone extends React.Component {
     session.answer(
       {
         pcConfig: {
-          iceServers,
+          iceServers: iceServers,
           rtcpMuxPolicy : 'negotiate'
         },
         mediaConstraints:
