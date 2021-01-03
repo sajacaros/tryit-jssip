@@ -6,6 +6,7 @@ import Toggle from 'material-ui/Toggle';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
+import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 import clone from 'clone';
 import Logger from '../Logger';
 import TransitionAppear from './TransitionAppear';
@@ -59,6 +60,11 @@ export default class Settings extends React.Component {
     let audioinput = this.state.audioinput || [];;
     let audiooutput = this.state.audiooutput || [];
     let videoinput = this.state.videoinput || [];
+    const styles = {
+      radioButton: {
+        marginBottom: 16,
+      },
+    };
     return (
       <TransitionAppear duration={250}>
         <div data-component='Settings'>
@@ -146,6 +152,31 @@ export default class Settings extends React.Component {
               onChange={this.handleChangeTurnCredential.bind(this)}
             />
           </div>
+          <div className='item'>
+            <label>Direction</label>
+            <RadioButtonGroup 
+              name="direction" 
+              defaultSelected={settings.direction || 'bidirectional'}
+              onChange={this.handleChangeDirection.bind(this)}
+            >
+              <RadioButton
+                value="bidirectional"
+                label="bi-direction"
+                style={styles.radioButton}
+              />
+              <RadioButton
+                value="send_only"
+                label="Send Only"
+                style={styles.radioButton}
+              />
+              <RadioButton
+                value="recv_only"
+                label="Recv Only"
+                style={styles.radioButton}
+              />
+            </RadioButtonGroup>
+          </div>
+
           <div className='item'>
             <DeviceSelector 
               inputLabel='audioinput'
@@ -357,6 +388,13 @@ export default class Settings extends React.Component {
     const settings = this.state.settings;
 
     settings.turn.credential = event.target.value;
+    this.setState({settings});
+  }
+
+  handleChangeDirection(event) {
+    const settings = this.state.settings;
+
+    settings.direction = event.target.value;
     this.setState({settings});
   }
 
