@@ -388,6 +388,8 @@ export default class Phone extends React.Component {
         }
       });
 
+      
+
     session.on('connecting', () => {
       this.setState({ session });
 

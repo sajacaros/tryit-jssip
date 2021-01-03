@@ -156,21 +156,21 @@ export default class Settings extends React.Component {
             <label>Direction</label>
             <RadioButtonGroup 
               name="direction" 
-              defaultSelected={settings.direction || 'bidirectional'}
+              defaultSelected={settings.direction || 'sendrecv'}
               onChange={this.handleChangeDirection.bind(this)}
             >
               <RadioButton
-                value="bidirectional"
-                label="bi-direction"
+                value="sendrecv"
+                label="Send And Recv"
                 style={styles.radioButton}
               />
               <RadioButton
-                value="send_only"
+                value="sendonly"
                 label="Send Only"
                 style={styles.radioButton}
               />
               <RadioButton
-                value="recv_only"
+                value="recvonly"
                 label="Recv Only"
                 style={styles.radioButton}
               />
