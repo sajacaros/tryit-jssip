@@ -91,7 +91,6 @@ export default class Session extends React.Component {
             ref='remoteVideo'
             className={classnames('remote-video', { hidden: noRemoteVideo })}
             autoPlay
-            // controls
           />
 
           <If condition={noRemoteVideo}>
