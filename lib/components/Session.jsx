@@ -9,6 +9,7 @@ import CamIcon from 'material-ui/svg-icons/av/videocam';
 import CamOffIcon from 'material-ui/svg-icons/av/videocam-off';
 import CamIcon2 from 'material-ui/svg-icons/av/video-label';
 import ScreenShare from 'material-ui/svg-icons/communication/screen-share'
+import RssFeed from 'material-ui/svg-icons/communication/rss-feed'
 import classnames from 'classnames';
 import JsSIP from 'jssip';
 import Logger from '../Logger';
@@ -55,7 +56,8 @@ export default class Session extends React.Component {
       videoMuted: false,
       screen: false,
       canHold: false,
-      ringing: false
+      ringing: false,
+      direction: 'sendrecv'
     };
 
     // Mounted flag
@@ -180,6 +182,20 @@ export default class Session extends React.Component {
                   </CamIcon2>
                 </When>
               </Choose>
+              <Choose>
+                <When condition={state.direction=='sendrecv'}>
+                  <RssFeed className='control' 
+                    color={'#fff'} 
+                    onClick={this.handleDirectionSendOnly.bind(this)}>
+                  </RssFeed>
+                </When>
+                <When condition={state.direction!='sendrecv'}>
+                  <RssFeed className='control' 
+                    color={'#fff'} 
+                    onClick={this.handleDirectionSendRecv.bind(this)}>
+                  </RssFeed>
+                </When>
+              </Choose>
               <Slider
                 className='control'
                 value={state.micVolume||1}
@@ -234,7 +250,6 @@ export default class Session extends React.Component {
       logger.debug('already have a remote stream');
 
       changeBandwidth(peerconnection, bandwidth);
-      changeDirection(session, peerconnection, direction);
       
       this._handleRemoteStream(remoteStream, audiooutputkey);
     }
@@ -355,7 +370,6 @@ export default class Session extends React.Component {
       logger.debug('peerconnection : ', peerconnection);
       logger.debug('peerconnection "track" event, event : ', event);
       changeBandwidth(peerconnection, bandwidth);
-      changeDirection(session, peerconnection, direction);
       this._handleRemoteStream(event.streams[0], audiooutputkey);
     });
   }
@@ -470,6 +484,18 @@ export default class Session extends React.Component {
         return;
       }
     })();
+  }
+
+  handleDirectionSendOnly() {
+    console.log('send only');
+    this.setState({direction:'sendonly'});
+    changeDirection(session, peerconnection, 'sendonly');
+  }
+
+  handleDirectionSendRecv() {
+    const.log('recv only');
+    this.setState({direction:'sendrecv'});
+    changeDirection(session, peerconnection, 'sendrecv');
   }
 
   handleCameraOn() {
