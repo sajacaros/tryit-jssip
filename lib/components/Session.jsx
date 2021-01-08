@@ -21,6 +21,7 @@ function changeDirection(connection, direction) {
   connection.getTransceivers().forEach(transceiver =>{
     console.log(`current direction : ${transceiver.currentDirection}, setting direction : ${direction}`);
     transceiver.direction = direction;
+    console.log(`current direction : ${transceiver.currentDirection}, setting direction : ${direction}`);
   });
 }
 
