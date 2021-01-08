@@ -19,7 +19,7 @@ const logger = new Logger('Session');
 
 function changeDirection(connection, direction) {
   connection.getTransceivers().forEach(transceiver =>{
-    console.log('direction : ', transceiver.currentDirection);
+    console.log(`current direction : ${transceiver.currentDirection}, setting direction : ${direction}`);
     transceiver.direction = direction;
   });
 }
@@ -548,5 +548,6 @@ Session.propTypes =
   onNotify: PropTypes.func.isRequired,
   onHideNotification: PropTypes.func.isRequired,
   bandwidth: PropTypes.string.isRequired,
+  direction: PropTypes.string.isRequired,
   audiooutputkey: PropTypes.string.isRequired
 };
