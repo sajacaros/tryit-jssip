@@ -487,15 +487,15 @@ export default class Session extends React.Component {
   }
 
   handleDirectionSendOnly() {
-    console.log('send only');
+    logger.debug('send only');
     this.setState({direction:'sendonly'});
-    changeDirection(session, peerconnection, 'sendonly');
+    changeDirection(this.props.session, this.props.session.connection, 'sendonly');
   }
 
   handleDirectionSendRecv() {
-    const.log('recv only');
+    logger.debug('recv only');
     this.setState({direction:'sendrecv'});
-    changeDirection(session, peerconnection, 'sendrecv');
+    changeDirection(this.props.session, this.props.session.connection, 'sendrecv');
   }
 
   handleCameraOn() {
