@@ -235,7 +235,7 @@ export default class Session extends React.Component {
 
       changeBandwidth(peerconnection, bandwidth);
       changeDirection(peerconnection, direction);
-      this.session.renegotiate();
+      session.renegotiate();
       
       this._handleRemoteStream(remoteStream, audiooutputkey);
     }
