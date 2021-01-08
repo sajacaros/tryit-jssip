@@ -17,10 +17,10 @@ import Slider from 'material-ui/Slider';
 
 const logger = new Logger('Session');
 
-function changeDirection(connection, direction) {
+function changeDirection(session, connection, direction) {
   connection.getTransceivers().forEach(transceiver =>{
-    console.log(`current direction : ${transceiver.currentDirection}, setting direction : ${direction}`);
     transceiver.direction = direction;
+    session.renegotiate();
     console.log(`current direction : ${transceiver.currentDirection}, setting direction : ${direction}`);
   });
 }
@@ -234,8 +234,7 @@ export default class Session extends React.Component {
       logger.debug('already have a remote stream');
 
       changeBandwidth(peerconnection, bandwidth);
-      changeDirection(peerconnection, direction);
-      session.renegotiate();
+      changeDirection(session, peerconnection, direction);
       
       this._handleRemoteStream(remoteStream, audiooutputkey);
     }
@@ -356,7 +355,7 @@ export default class Session extends React.Component {
       logger.debug('peerconnection : ', peerconnection);
       logger.debug('peerconnection "track" event, event : ', event);
       changeBandwidth(peerconnection, bandwidth);
-      changeDirection(peerconnection, direction);
+      changeDirection(session, peerconnection, direction);
       this._handleRemoteStream(event.streams[0], audiooutputkey);
     });
   }
