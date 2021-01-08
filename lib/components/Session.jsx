@@ -21,7 +21,7 @@ const logger = new Logger('Session');
 function changeDirection(session, connection, direction) {
   connection.getTransceivers().forEach(transceiver =>{
     transceiver.direction = direction;
-    session.renegotiate();
+    // session.renegotiate();
     console.log(`current direction : ${transceiver.currentDirection}, setting direction : ${direction}`);
   });
 }
