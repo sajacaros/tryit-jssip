@@ -17,6 +17,13 @@ import Slider from 'material-ui/Slider';
 
 const logger = new Logger('Session');
 
+function changeDirection(connection, direction) {
+  connection.getTransceivers().forEach(transceiver =>{
+    console.log('direction : ', transceiver.currentDirection);
+    transceiver.direction = direction;
+  });
+}
+
 function changeBandwidth(connection, bandwidth) {
   connection.getSenders()
     .filter(sender => sender.track && sender.track.kind==='video')
@@ -198,6 +205,7 @@ export default class Session extends React.Component {
     const localStream = peerconnection.getLocalStreams()[0];
     const remoteStream = peerconnection.getRemoteStreams()[0];
     const bandwidth = parseInt(this.props.bandwidth);
+    const direction = this.props.direction;
     const audiooutputkey = this.props.audiooutputkey;
     
     // Handle local stream
@@ -225,6 +233,7 @@ export default class Session extends React.Component {
       logger.debug('already have a remote stream');
 
       changeBandwidth(peerconnection, bandwidth);
+      changeDirection(peerconnection, direction);
       
       this._handleRemoteStream(remoteStream, audiooutputkey);
     }
@@ -345,6 +354,7 @@ export default class Session extends React.Component {
       logger.debug('peerconnection : ', peerconnection);
       logger.debug('peerconnection "track" event, event : ', event);
       changeBandwidth(peerconnection, bandwidth);
+      changeDirection(peerconnection, direction);
       this._handleRemoteStream(event.streams[0], audiooutputkey);
     });
   }
