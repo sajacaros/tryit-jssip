@@ -18,10 +18,10 @@ import Slider from 'material-ui/Slider';
 
 const logger = new Logger('Session');
 
-function changeDirection(session, connection, direction) {
+function changeDirection(connection, direction) {
   connection.getTransceivers().forEach(transceiver =>{
     transceiver.direction = direction;
-    // session.renegotiate();
+    // connection.renegotiate();
     console.log(`current direction : ${transceiver.currentDirection}, setting direction : ${direction}`);
   });
 }
@@ -489,13 +489,13 @@ export default class Session extends React.Component {
   handleDirectionSendOnly() {
     logger.debug('send only');
     this.setState({direction:'sendonly'});
-    changeDirection(this.props.session, this.props.session.connection, 'sendonly');
+    changeDirection(this.props.session.connection, 'sendonly');
   }
 
   handleDirectionSendRecv() {
     logger.debug('recv only');
     this.setState({direction:'sendrecv'});
-    changeDirection(this.props.session, this.props.session.connection, 'sendrecv');
+    changeDirection(this.props.session.connection, 'sendrecv');
   }
 
   handleCameraOn() {
