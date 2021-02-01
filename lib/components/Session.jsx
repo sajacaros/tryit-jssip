@@ -9,7 +9,9 @@ import CamIcon from 'material-ui/svg-icons/av/videocam';
 import CamOffIcon from 'material-ui/svg-icons/av/videocam-off';
 import CamIcon2 from 'material-ui/svg-icons/av/video-label';
 import ScreenShare from 'material-ui/svg-icons/communication/screen-share'
-import RssFeed from 'material-ui/svg-icons/communication/rss-feed'
+import RecvOnly from 'material-ui/svg-icons/navigation/arrow-back'
+import SendOnly from 'material-ui/svg-icons/navigation/arrow-forward'
+import SendRecv from 'material-ui/svg-icons/action/settings-ethernet';
 import classnames from 'classnames';
 import JsSIP from 'jssip';
 import Logger from '../Logger';
@@ -182,20 +184,18 @@ export default class Session extends React.Component {
                   </CamIcon2>
                 </When>
               </Choose>
-              <Choose>
-                <When condition={state.direction=='sendrecv'}>
-                  <RssFeed className='control' 
-                    color={'#fff'} 
-                    onClick={this.handleDirectionSendOnly.bind(this)}>
-                  </RssFeed>
-                </When>
-                <When condition={state.direction!='sendrecv'}>
-                  <RssFeed className='control' 
-                    color={'#fff'} 
-                    onClick={this.handleDirectionSendRecv.bind(this)}>
-                  </RssFeed>
-                </When>
-              </Choose>
+              <SendRecv className='control' 
+                color={'#fff'} 
+                onClick={this.handleDirectionSendRecv.bind(this)}>
+              </SendRecv>
+              <SendOnly className='control' 
+                color={'#fff'} 
+                onClick={this.handleDirectionSendOnly.bind(this)}>
+              </SendOnly>
+              <RecvOnly className='control' 
+                color={'#fff'} 
+                onClick={this.handleDirectionSendRecv.bind(this)}>
+              </RecvOnly>  
               <Slider
                 className='control'
                 value={state.micVolume||1}
