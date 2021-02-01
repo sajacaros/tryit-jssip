@@ -194,7 +194,7 @@ export default class Session extends React.Component {
               </SendOnly>
               <RecvOnly className='control' 
                 color={'#fff'} 
-                onClick={this.handleDirectionSendRecv.bind(this)}>
+                onClick={this.handleDirectionRecvOnly.bind(this)}>
               </RecvOnly>  
               <Slider
                 className='control'
@@ -243,6 +243,7 @@ export default class Session extends React.Component {
 
       this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       this.gainNode = this.configGainNode(); 
+
     }
 
     // If incoming all we already have the remote stream
@@ -372,6 +373,24 @@ export default class Session extends React.Component {
       changeBandwidth(peerconnection, bandwidth);
       this._handleRemoteStream(event.streams[0], audiooutputkey);
     });
+
+    peerconnection.addEventListener('negotiationneeded', (e) => {
+      if (!this._mounted) {
+        logger.error('_handleRemoteStream() | component not mounted');
+        return;
+      }
+      const options = {
+        'mediaConstraints': {'audio': true, 'video': true},
+        'pcConfig': {
+          'iceServers': [
+            { 'urls': ['stun.l.google.com:19302'] },
+          ],
+          sdpSemantics: 'unified-plan'
+        }
+      };
+      console.log('Peerconnection negotiationneeded event: ', e);
+      session.renegotiate(options, ()=>{console.log("negotiation complete!!")});
+    });
   }
 
   componentWillUnmount() {
@@ -486,17 +505,24 @@ export default class Session extends React.Component {
     })();
   }
 
+  handleDirectionSendRecv() {
+    logger.debug('send recv');
+    this.setState({direction:'sendrecv'});
+    changeDirection(this.props.session.connection, 'sendrecv');
+  }
+
   handleDirectionSendOnly() {
     logger.debug('send only');
     this.setState({direction:'sendonly'});
     changeDirection(this.props.session.connection, 'sendonly');
   }
 
-  handleDirectionSendRecv() {
+  handleDirectionRecvOnly() {
     logger.debug('recv only');
-    this.setState({direction:'sendrecv'});
-    changeDirection(this.props.session.connection, 'sendrecv');
+    this.setState({direction:'recvonly'});
+    changeDirection(this.props.session.connection, 'recvonly');
   }
+  
 
   handleCameraOn() {
     logger.debug('handleCameraon()');

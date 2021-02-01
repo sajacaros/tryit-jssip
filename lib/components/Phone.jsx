@@ -386,8 +386,10 @@ export default class Phone extends React.Component {
         {
           offerToReceiveAudio: 1,
           offerToReceiveVideo: 1
-        }
-      });
+        },
+        sdpSemantics: 'unified-plan'
+      }
+    );
 
       
 
