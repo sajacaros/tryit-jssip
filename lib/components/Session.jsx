@@ -58,8 +58,7 @@ export default class Session extends React.Component {
       screen: false,
       canHold: false,
       ringing: false,
-      direction: 'sendrecv',
-      isNegotiate: false
+      direction: 'sendrecv'
     };
 
     // Mounted flag
@@ -222,7 +221,6 @@ export default class Session extends React.Component {
     const localStream = peerconnection.getLocalStreams()[0];
     const remoteStream = peerconnection.getRemoteStreams()[0];
     const bandwidth = parseInt(this.props.bandwidth);
-    const direction = this.props.direction;
     const audiooutputkey = this.props.audiooutputkey;
     
     // Handle local stream
@@ -379,10 +377,7 @@ export default class Session extends React.Component {
         logger.error('_handleRemoteStream() | component not mounted');
         return;
       }
-      if( this.state.isNegotiate ) {
-        logger.warn('aleady negotiated..');
-        return;
-      }
+    
       const options = {
         // 'useUpdate': true
         // 'mediaConstraints': {'audio': true, 'video': true},
@@ -393,14 +388,13 @@ export default class Session extends React.Component {
         //   sdpSemantics: 'unified-plan'
         // }
       };
-      console.log('Peerconnection negotiationneeded event: ', e);
-      if( !this.state.isNegotiate ) {
-        this.setState(prev=>({ ...prev, isNegotiate: true })); 
-        session.renegotiate(options, ()=>{
-          console.log("negotiation complete!!")
-          this.setState(prev=>({ ...prev, isNegotiate: false })); 
-        });
-      }
+      logger.debug('Peerconnection negotiationneeded event: ', e);
+      
+
+      session.renegotiate(options, ()=>{
+        console.log("negotiation complete!!");
+      });
+      
     });
   }
 
