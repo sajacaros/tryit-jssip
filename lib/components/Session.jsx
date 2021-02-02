@@ -380,13 +380,14 @@ export default class Session extends React.Component {
         return;
       }
       const options = {
-        'mediaConstraints': {'audio': true, 'video': true},
-        'pcConfig': {
-          'iceServers': [
-            { 'urls': ['stun.l.google.com:19302'] },
-          ],
-          sdpSemantics: 'unified-plan'
-        }
+        'useUpdate': true
+        // 'mediaConstraints': {'audio': true, 'video': true},
+        // 'pcConfig': {
+        //   'iceServers': [
+        //     { 'urls': ['stun.l.google.com:19302'] },
+        //   ],
+        //   sdpSemantics: 'unified-plan'
+        // }
       };
       console.log('Peerconnection negotiationneeded event: ', e);
       session.renegotiate(options, ()=>{console.log("negotiation complete!!")});
