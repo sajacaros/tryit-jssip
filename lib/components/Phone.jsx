@@ -111,7 +111,7 @@ export default class Phone extends React.Component {
                 onNotify={props.onNotify}
                 onHideNotification={props.onHideNotification}
                 bandwidth={props.settings.bandwidth}
-                direction={props.settings.direction}
+                // direction={props.settings.direction}
                 audiooutputkey={props.settings.audiooutputkey}
               />
             </If>
