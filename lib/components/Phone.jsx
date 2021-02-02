@@ -457,6 +457,7 @@ export default class Phone extends React.Component {
           video: videoConstraints,
           audio: audioConstraints
         },
+        sdpSemantics: 'unified-plan'
       });
   }
 
