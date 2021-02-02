@@ -23,7 +23,6 @@ const logger = new Logger('Session');
 function changeDirection(connection, direction) {
   connection.getTransceivers().forEach(transceiver =>{
     transceiver.direction = direction;
-    // connection.renegotiate();
     console.log(`current direction : ${transceiver.currentDirection}, setting direction : ${direction}`);
   });
 }
@@ -59,7 +58,8 @@ export default class Session extends React.Component {
       screen: false,
       canHold: false,
       ringing: false,
-      direction: 'sendrecv'
+      direction: 'sendrecv',
+      isNegotiate: false
     };
 
     // Mounted flag
@@ -379,6 +379,10 @@ export default class Session extends React.Component {
         logger.error('_handleRemoteStream() | component not mounted');
         return;
       }
+      if( this.state.isNegotiate ) {
+        logger.warn('aleady negotiated..');
+        return;
+      }
       const options = {
         // 'useUpdate': true
         // 'mediaConstraints': {'audio': true, 'video': true},
@@ -390,7 +394,13 @@ export default class Session extends React.Component {
         // }
       };
       console.log('Peerconnection negotiationneeded event: ', e);
-      session.renegotiate(options, ()=>{console.log("negotiation complete!!")});
+      if( !this.state.isNegotiate ) {
+        this.setState(prev=>({ ...prev, isNegotiate: true })); 
+        session.renegotiate(options, ()=>{
+          console.log("negotiation complete!!")
+          this.setState(prev=>({ ...prev, isNegotiate: false })); 
+        });
+      }
     });
   }
 
