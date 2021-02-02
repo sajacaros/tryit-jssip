@@ -380,7 +380,7 @@ export default class Session extends React.Component {
         return;
       }
       const options = {
-        'useUpdate': true
+        // 'useUpdate': true
         // 'mediaConstraints': {'audio': true, 'video': true},
         // 'pcConfig': {
         //   'iceServers': [
@@ -602,6 +602,6 @@ Session.propTypes =
   onNotify: PropTypes.func.isRequired,
   onHideNotification: PropTypes.func.isRequired,
   bandwidth: PropTypes.string.isRequired,
-  direction: PropTypes.string.isRequired,
+  // direction: PropTypes.string.isRequired,
   audiooutputkey: PropTypes.string.isRequired
 };
