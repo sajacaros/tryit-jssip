@@ -299,12 +299,12 @@ export default class Phone extends React.Component {
 
       session.on('sdp', (data) => {
         // sdpLog(data);
-        // if (data.originator === 'local') {
-        //   const parsedSdp = sdpUtil.parse(data.sdp);
-        //   sdpUtil.transformSdp(parsedSdp, this.props.settings);
-        //   data.sdp = sdpUtil.write(parsedSdp);
-        logger.debug("306 tranformed sdp : ", data.sdp);
-        // }
+        if (data.originator === 'local') {
+          const parsedSdp = sdpUtil.parse(data.sdp);
+          sdpUtil.transformSdp(parsedSdp, this.props.settings);
+          data.sdp = sdpUtil.write(parsedSdp);
+          logger.debug("306 tranformed sdp : ", data.sdp);
+        }
       });
       session.on('peerconnection', e => logger.debug('413 peerconnection : ', e));
     });
@@ -427,12 +427,12 @@ export default class Phone extends React.Component {
 
     session.on('sdp', (data) => {
       // sdpLog(data);
-      // if (data.originator === 'local') {
-        // const parsedSdp = sdpUtil.parse(data.sdp);
-        // sdpUtil.transformSdp(parsedSdp, this.props.settings);
-        // data.sdp = sdpUtil.write(parsedSdp);
-      logger.debug("434 tranformed sdp : ", data.sdp);
-      // }
+      if (data.originator === 'local') {
+        const parsedSdp = sdpUtil.parse(data.sdp);
+        sdpUtil.transformSdp(parsedSdp, this.props.settings);
+        data.sdp = sdpUtil.write(parsedSdp);
+        logger.debug("434 tranformed sdp : ", data.sdp);
+      }
     });
 
     session.on('peerconnection', e => logger.debug('532 peerconnection : ', e));
