@@ -378,20 +378,9 @@ export default class Session extends React.Component {
         return;
       }
     
-      const options = {
-        // 'useUpdate': true
-        // 'mediaConstraints': {'audio': true, 'video': true},
-        // 'pcConfig': {
-        //   'iceServers': [
-        //     { 'urls': ['stun.l.google.com:19302'] },
-        //   ],
-        //   sdpSemantics: 'unified-plan'
-        // }
-        useUpdate: true
-      };
       logger.debug('Peerconnection negotiationneeded event: ', e);
       
-      session.renegotiate(options, ()=>{
+      session.renegotiate({ useUpdate: true }, ()=>{
         console.log("negotiation complete!!");
       });
       

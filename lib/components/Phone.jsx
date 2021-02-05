@@ -19,9 +19,10 @@ import * as sdpUtil from '../common/sdpUtil';
 
 // TODO: For testing.
 window.jssip = JsSIP;
-window.jssip.debug.enable('JsSIP:*');
+// window.jssip.debug.enable('JsSIP:*');
 // window.jssip.debug.enable('tryit-jssip:*');
 // window.jssip.debug.enable('*');
+window.jssip.debug.enable('JsSIP:* tryit-jssip:*');
 
 const callstatsjssip = window.callstatsjssip;
 
@@ -298,12 +299,14 @@ export default class Phone extends React.Component {
       });
 
       session.on('sdp', (data) => {
-        // sdpLog(data);
+        logger.debug("302 origin sdp : ", data.sdp);
         if (data.originator === 'local') {
           const parsedSdp = sdpUtil.parse(data.sdp);
+          logger.debug("!!! sdp : ", parsedSdp);
           sdpUtil.transformSdp(parsedSdp, this.props.settings);
-          data.sdp = sdpUtil.write(parsedSdp);
-          logger.debug("306 tranformed sdp : ", data.sdp);
+          const transformedSdp = sdpUtil.write(parsedSdp)
+          logger.debug("307 tranformed sdp : ", transformedSdp);
+          data.sdp = transformedSdp;
         }
       });
       session.on('peerconnection', e => logger.debug('413 peerconnection : ', e));
@@ -426,12 +429,14 @@ export default class Phone extends React.Component {
     });
 
     session.on('sdp', (data) => {
-      // sdpLog(data);
+      logger.debug("431 origin sdp : ", data.sdp);
       if (data.originator === 'local') {
         const parsedSdp = sdpUtil.parse(data.sdp);
+        logger.debug("!!! sdp : ", parsedSdp);
         sdpUtil.transformSdp(parsedSdp, this.props.settings);
-        data.sdp = sdpUtil.write(parsedSdp);
-        logger.debug("434 tranformed sdp : ", data.sdp);
+        const transformedSdp = sdpUtil.write(parsedSdp);
+        logger.debug("436 tranformed sdp : ", transformedSdp);
+        data.sdp = transformedSdp;
       }
     });
 
