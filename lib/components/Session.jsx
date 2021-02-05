@@ -22,8 +22,8 @@ const logger = new Logger('Session');
 
 function changeDirection(connection, direction) {
   connection.getTransceivers().forEach(transceiver =>{
+    console.log(`transceiver(${transceiver.mid}) change direction - ${transceiver.currentDirection} => ${direction}`);
     transceiver.direction = direction;
-    console.log(`current direction : ${transceiver.currentDirection}, setting direction : ${direction}`);
   });
 }
 
@@ -582,7 +582,7 @@ export default class Session extends React.Component {
       return;
     }
 
-    if(stream.getVideoTracks instanceof Function){
+    if(stream && stream.getVideoTracks && stream.getVideoTracks instanceof Function){
       const videoTrack = stream.getVideoTracks()[0];
       this.setState({ remoteHasVideo: Boolean(videoTrack) });
     } else {
