@@ -579,13 +579,15 @@ export default class Session extends React.Component {
   _checkRemoteVideo(stream) {
     if (!this._mounted) {
       logger.error('_checkRemoteVideo() | component not mounted');
-
       return;
     }
 
-    const videoTrack = stream.getVideoTracks()[0];
-
-    this.setState({ remoteHasVideo: Boolean(videoTrack) });
+    if(stream.getVideoTracks instanceof Function){
+      const videoTrack = stream.getVideoTracks()[0];
+      this.setState({ remoteHasVideo: Boolean(videoTrack) });
+    } else {
+      logger.error('remote video is null');
+    }
   }
 }
 
