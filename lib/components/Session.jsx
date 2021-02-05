@@ -387,10 +387,10 @@ export default class Session extends React.Component {
         //   ],
         //   sdpSemantics: 'unified-plan'
         // }
+        useUpdate: true
       };
       logger.debug('Peerconnection negotiationneeded event: ', e);
       
-
       session.renegotiate(options, ()=>{
         console.log("negotiation complete!!");
       });
