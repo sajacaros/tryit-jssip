@@ -22,8 +22,10 @@ const logger = new Logger('Session');
 
 function changeDirection(connection, direction) {
   connection.getTransceivers().forEach(transceiver =>{
-    console.log(`transceiver(${transceiver.mid}) change direction - ${transceiver.currentDirection} => ${direction}`);
-    transceiver.direction = direction;
+    if( transceiver.currentDirection !== 'inactive') {
+      console.log(`transceiver(${transceiver.mid}) change direction - ${transceiver.currentDirection} => ${direction}`);
+      transceiver.direction = direction;
+    }
   });
 }
 
