@@ -298,17 +298,17 @@ export default class Phone extends React.Component {
           });
       });
 
-      // session.on('sdp', (data) => {
-      //   logger.debug("302 origin sdp : ", data.sdp);
-      //   if (data.originator === 'local') {
-      //     const parsedSdp = sdpUtil.parse(data.sdp);
-      //     logger.debug("!!! sdp : ", parsedSdp);
-      //     sdpUtil.transformSdp(parsedSdp, this.props.settings);
-      //     const transformedSdp = sdpUtil.write(parsedSdp)
-      //     logger.debug("307 tranformed sdp : ", transformedSdp);
-      //     data.sdp = transformedSdp;
-      //   }
-      // });
+      session.on('sdp', (data) => {
+        logger.debug("302 origin sdp : ", data.sdp);
+        if (data.originator === 'local') {
+          const parsedSdp = sdpUtil.parse(data.sdp);
+          logger.debug("!!! sdp : ", parsedSdp);
+          sdpUtil.transformSdp(parsedSdp, this.props.settings);
+          const transformedSdp = sdpUtil.write(parsedSdp)
+          logger.debug("307 tranformed sdp : ", transformedSdp);
+          data.sdp = transformedSdp;
+        }
+      });
       session.on('peerconnection', e => logger.debug('413 peerconnection : ', e));
     });
 
@@ -428,17 +428,17 @@ export default class Phone extends React.Component {
       audioPlayer.play('answered');
     });
 
-    // session.on('sdp', (data) => {
-    //   logger.debug("431 origin sdp : ", data.sdp);
-    //   if (data.originator === 'local') {
-    //     const parsedSdp = sdpUtil.parse(data.sdp);
-    //     logger.debug("!!! sdp : ", parsedSdp);
-    //     sdpUtil.transformSdp(parsedSdp, this.props.settings);
-    //     const transformedSdp = sdpUtil.write(parsedSdp);
-    //     logger.debug("436 tranformed sdp : ", transformedSdp);
-    //     data.sdp = transformedSdp;
-    //   }
-    // });
+    session.on('sdp', (data) => {
+      logger.debug("431 origin sdp : ", data.sdp);
+      if (data.originator === 'local') {
+        const parsedSdp = sdpUtil.parse(data.sdp);
+        logger.debug("!!! sdp : ", parsedSdp);
+        sdpUtil.transformSdp(parsedSdp, this.props.settings);
+        const transformedSdp = sdpUtil.write(parsedSdp);
+        logger.debug("436 tranformed sdp : ", transformedSdp);
+        data.sdp = transformedSdp;
+      }
+    });
 
     session.on('peerconnection', e => logger.debug('532 peerconnection : ', e));
   }
