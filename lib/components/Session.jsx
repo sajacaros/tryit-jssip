@@ -70,6 +70,8 @@ export default class Session extends React.Component {
 
     this.audioCtx = null;
     this.gainNode = null;
+
+    this.messageInput = React.createRef();
   }
 
   render() {
@@ -111,6 +113,19 @@ export default class Session extends React.Component {
               {noRemoteVideo}
             </div>
           </If>
+
+          <div style={{width:300, height:300, float: 'right', marginTop: '300px', marginRight:'5px', display: 'flex', flexDirection: 'column'}}>
+            <div style={{width:'100%', height:200, backgroundColor: 'white'}}></div>
+            
+            <input 
+              type="text" 
+              name="message" 
+              style={{width:'100%', backgroundColor: 'white', margin: '5px 0'}}
+              ref={this.messageInput}
+            />
+            
+            <button style={{backgroundColor:'#4CAF50', color: 'white'}} onClick={this.sendMessage.bind(this)}>Message Send</button>
+          </div>
 
           <div className='controls-container'>
             <div className='controls'>
@@ -474,6 +489,15 @@ export default class Session extends React.Component {
 
   stopStream(stream) {
     stream.getTracks().forEach(t=>t.stop());
+  }
+
+  sendMessage() {
+    if( !this.messageInput.current.value || this.messageInput.current.value.length ===0) {
+      console.warn('undefined or empty message');
+      return;
+    }
+    console.log(this.messageInput.current.value);
+    this.messageInput.current.value = '';
   }
 
   async changeStream(originStream, newTrack, stopping=false , kind='video') {
