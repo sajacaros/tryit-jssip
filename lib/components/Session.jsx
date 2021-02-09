@@ -382,7 +382,16 @@ export default class Session extends React.Component {
     
       logger.debug('Peerconnection negotiationneeded event: ', e);
       
-      session.renegotiate({ useUpdate: true }, ()=>{
+      const options = {
+        useUpdate: true,
+        rtcOfferConstraints:
+        {
+          offerToReceiveAudio: 1,
+          offerToReceiveVideo: 1
+        }
+      }
+      
+      session.renegotiate(options, ()=>{
         console.log("negotiation complete!!");
       });
       

@@ -22,7 +22,7 @@ window.jssip = JsSIP;
 // window.jssip.debug.enable('JsSIP:*');
 // window.jssip.debug.enable('tryit-jssip:*');
 // window.jssip.debug.enable('*');
-window.jssip.debug.enable('JsSIP:RTCSession tryit-jssip:*');
+window.jssip.debug.enable('JsSIP:RTCSession* tryit-jssip:*');
 
 const callstatsjssip = window.callstatsjssip;
 
