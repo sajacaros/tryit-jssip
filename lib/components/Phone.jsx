@@ -302,10 +302,10 @@ export default class Phone extends React.Component {
         logger.debug("302 origin sdp : ", data.sdp);
         if (data.originator === 'local') {
           const parsedSdp = sdpUtil.parse(data.sdp);
-          logger.debug("!!! sdp : ", parsedSdp);
+          // logger.debug("!!! sdp : ", parsedSdp);
           sdpUtil.transformSdp(parsedSdp, this.props.settings);
           const transformedSdp = sdpUtil.write(parsedSdp)
-          logger.debug("307 tranformed sdp : ", transformedSdp);
+          logger.debug("308 tranformed sdp : ", transformedSdp);
           data.sdp = transformedSdp;
         }
       });
@@ -429,13 +429,13 @@ export default class Phone extends React.Component {
     });
 
     session.on('sdp', (data) => {
-      logger.debug("431 origin sdp : ", data.sdp);
+      logger.debug("432 origin sdp : ", data.sdp);
       if (data.originator === 'local') {
         const parsedSdp = sdpUtil.parse(data.sdp);
-        logger.debug("!!! sdp : ", parsedSdp);
+        // logger.debug("!!! sdp : ", parsedSdp);
         sdpUtil.transformSdp(parsedSdp, this.props.settings);
         const transformedSdp = sdpUtil.write(parsedSdp);
-        logger.debug("436 tranformed sdp : ", transformedSdp);
+        logger.debug("438 tranformed sdp : ", transformedSdp);
         data.sdp = transformedSdp;
       }
     });
