@@ -526,7 +526,8 @@ export default class Session extends React.Component {
 
     const targetUri = this.props.session.remote_identity.uri.scheme+':'+this.props.session.remote_identity.uri.user+'@'+this.props.session.remote_identity.uri.host;
     console.log('remote identity : ', this.props.session.remote_identity.uri+ ', target : '+targetUri);
-    this.props.ua.sendMessage(encodeURI(targetUri,this.messageInput.current.value), {'eventHandlers': eventHandlers});
+    this.props.ua.sendMessage(targetUri, encodeURI(this.messageInput.current.value), {'eventHandlers': eventHandlers});
+    console.log('encode text : ', encodeURI(this.messageInput.current.value))
     this.messageInput.current.value = '';
   }
 
