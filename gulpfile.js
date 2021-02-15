@@ -228,7 +228,27 @@ gulp.task('openbrowser', (done) =>
 				baseDir : OUTPUT_DIR
 			},
 			https     : true,
-			// https     : false,
+			//https     : false,
+			ghostMode : false,
+			files     : path.join(OUTPUT_DIR, '**', '*')
+		});
+
+	done();
+});
+gulp.task('openbrowser-server', (done) =>
+{
+	browserSync(
+		{
+			host: 'bts.smartseecloud.com',
+			server :
+			{
+				baseDir : OUTPUT_DIR
+			},
+			https     : {
+				key: "/etc/letsencrypt/live/bts.smartseecloud.com/privkey.pem",
+				cert: "/etc/letsencrypt/live/bts.smartseecloud.com/cert.pem"
+			},
+			//https     : false,
 			ghostMode : false,
 			files     : path.join(OUTPUT_DIR, '**', '*')
 		});
