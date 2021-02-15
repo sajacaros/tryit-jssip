@@ -284,7 +284,14 @@ export default class Session extends React.Component {
       });
     }
 
-    this.props.ua.on('newMessage', (data)=>console.log('message : ', data));
+    this.props.ua.on('newMessage', (data)=>{
+      if(!data || !data.originator || data.originator !== 'remote') {
+        console.log('illigal message : ', data);
+        return;
+      }
+      this.addChatMessage(this.chatBox.current, decodeURI(data.request.body), '->')
+      console.log('message : ', data);
+    });
 
     session.on('progress', (data) => {
       if (!this._mounted)
@@ -511,14 +518,16 @@ export default class Session extends React.Component {
       console.warn('undefined or empty message');
       return;
     }
-    this.addChatMessage(this.chatBox.current, this.messageInput.current.value, '-> ');
+    this.addChatMessage(this.chatBox.current, this.messageInput.current.value, '<-');
     const eventHandlers = {
       'succeeded': function(data){ console.log('message send succeeded, data : ', data); },
       'failed':    function(data){console.log('message send failed, data : ', data);}
     }
 
-    console.log('remote identity : ', this.props.session.remote_identity.uri.user);
-    this.props.ua.sendMessage(this.props.session.remote_identity.uri.user,this.messageInput.current.value, {'eventHandlers': eventHandlers});
+    const targetUri = this.props.session.remote_identity.uri.scheme+':'+this.props.session.remote_identity.uri.user+'@'+this.props.session.remote_identity.uri.host;
+    console.log('remote identity : ', this.props.session.remote_identity.uri+ ', target : '+targetUri);
+    this.props.ua.sendMessage(targetUri, encodeURI(this.messageInput.current.value), {'eventHandlers': eventHandlers});
+    console.log('encode text : ', encodeURI(this.messageInput.current.value))
     this.messageInput.current.value = '';
   }
 
