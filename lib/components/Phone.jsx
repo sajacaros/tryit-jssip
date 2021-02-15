@@ -114,6 +114,7 @@ export default class Phone extends React.Component {
                 bandwidth={props.settings.bandwidth}
                 // direction={props.settings.direction}
                 audiooutputkey={props.settings.audiooutputkey}
+                ua={this._ua}
               />
             </If>
 

@@ -70,6 +70,9 @@ export default class Session extends React.Component {
 
     this.audioCtx = null;
     this.gainNode = null;
+
+    this.messageInput = React.createRef();
+    this.chatBox = React.createRef();
   }
 
   render() {
@@ -111,6 +114,22 @@ export default class Session extends React.Component {
               {noRemoteVideo}
             </div>
           </If>
+
+          <div style={{width:300, height:300, float: 'right', marginTop: '400px', marginRight:'5px', display: 'flex', flexDirection: 'column'}}>
+            <div 
+              style={{width:'100%', height:200, backgroundColor: 'white'}}
+              ref={this.chatBox}
+            ></div>
+            
+            <input 
+              type="text" 
+              name="message" 
+              style={{width:'100%', backgroundColor: 'white', margin: '5px 0'}}
+              ref={this.messageInput}
+            />
+            
+            <button style={{backgroundColor:'#4CAF50', color: 'white'}} onClick={this.sendMessage.bind(this)}>Message Send</button>
+          </div>
 
           <div className='controls-container'>
             <div className='controls'>
@@ -224,6 +243,7 @@ export default class Session extends React.Component {
     const remoteStream = peerconnection.getRemoteStreams()[0];
     const bandwidth = parseInt(this.props.bandwidth);
     const audiooutputkey = this.props.audiooutputkey;
+
     
     // Handle local stream
     if (localStream) {
@@ -263,6 +283,8 @@ export default class Session extends React.Component {
         this.setState({ canHold: true });
       });
     }
+
+    this.props.ua.on('newMessage', (data)=>console.log('message : ', data));
 
     session.on('progress', (data) => {
       if (!this._mounted)
@@ -474,6 +496,30 @@ export default class Session extends React.Component {
 
   stopStream(stream) {
     stream.getTracks().forEach(t=>t.stop());
+  }
+
+  addChatMessage(chatbox, message, direction){
+    const el = document.createElement("p");
+    const txtNode = document.createTextNode(direction +' '+ message);
+  
+    el.appendChild(txtNode);
+    chatbox.appendChild(el);
+  }
+
+  sendMessage() {
+    if( !this.messageInput.current.value || this.messageInput.current.value.length ===0) {
+      console.warn('undefined or empty message');
+      return;
+    }
+    this.addChatMessage(this.chatBox.current, this.messageInput.current.value, '-> ');
+    const eventHandlers = {
+      'succeeded': function(data){ console.log('message send succeeded, data : ', data); },
+      'failed':    function(data){console.log('message send failed, data : ', data);}
+    }
+
+    console.log('remote identity : ', this.props.session.remote_identity.uri.user);
+    this.props.ua.sendMessage(this.props.session.remote_identity.uri.user,this.messageInput.current.value, {'eventHandlers': eventHandlers});
+    this.messageInput.current.value = '';
   }
 
   async changeStream(originStream, newTrack, stopping=false , kind='video') {
