@@ -312,5 +312,16 @@ gulp.task('live', gulp.series(
 	'watch',
 	'openbrowser'
 ));
+gulp.task('live2', gulp.series(
+	'env:dev',
+	'clean',
+	'lint',
+	'bundle:watch',
+	'html',
+	'css',
+	'resources',
+	'watch',
+	'openbrowser-server'
+));
 
 gulp.task('default', gulp.series('prod'));
