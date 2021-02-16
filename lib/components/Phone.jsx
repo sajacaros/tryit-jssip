@@ -41,6 +41,7 @@ export default class Phone extends React.Component {
       // 'connecting' / disconnected' / 'connected' / 'registered'
       status: 'disconnected',
       session: null,
+      fileChannel: null,
       incomingSession: null
     };
 
@@ -115,6 +116,7 @@ export default class Phone extends React.Component {
                 // direction={props.settings.direction}
                 audiooutputkey={props.settings.audiooutputkey}
                 ua={this._ua}
+                fileChannel={state.fileChannel}
               />
             </If>
 
@@ -310,7 +312,13 @@ export default class Phone extends React.Component {
           data.sdp = transformedSdp;
         }
       });
-      session.on('peerconnection', e => logger.debug('413 peerconnection : ', e));
+      
+      session.on('peerconnection', (data)=> {
+        logger.debug('413 peerconnection : ', data)
+        const datachannel = data.peerconnection.createDataChannel('sendDataChannel');
+        console.log('datachannel : ', datachannel);
+        this.setState({fileChannel:datachannel});
+      });
     });
 
     this._ua.start();
@@ -441,7 +449,12 @@ export default class Phone extends React.Component {
       }
     });
 
-    session.on('peerconnection', e => logger.debug('532 peerconnection : ', e));
+    session.on('peerconnection', (data)=> {
+      logger.debug('450 peerconnection : ', data)
+      const datachannel = data.peerconnection.createDataChannel('sendDataChannel');
+      console.log('datachannel : ', datachannel);
+      this.setState({fileChannel:datachannel});
+    });
   }
 
   handleAnswerIncoming() {

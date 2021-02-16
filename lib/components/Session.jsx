@@ -17,6 +17,7 @@ import JsSIP from 'jssip';
 import Logger from '../Logger';
 import TransitionAppear from './TransitionAppear';
 import Slider from 'material-ui/Slider';
+import {init, sendFile, receiveChannelCallback} from '../common/WebrtcDataChannelManager';
 
 const logger = new Logger('Session');
 
@@ -73,6 +74,10 @@ export default class Session extends React.Component {
 
     this.messageInput = React.createRef();
     this.chatBox = React.createRef();
+
+    this.fileInput = React.createRef();
+    this.sendFileButton= React.createRef();
+    this.downloadAnchor = React.createRef();
   }
 
   render() {
@@ -116,6 +121,13 @@ export default class Session extends React.Component {
           </If>
 
           <div style={{width:300, height:300, float: 'right', marginTop: '400px', marginRight:'5px', display: 'flex', flexDirection: 'column'}}>
+            <div>
+              <div >
+                <input type="file" name="files" onChange={this.handleFileInputChange.bind(this)} ref={this.fileInput}/>
+                <button style={{backgroundColor: '#4CAF50', color: 'white'}} disabled ref={this.sendFileButton}>File Send</button>
+              </div>
+              <a ref={this.downloadAnchor} id="download"></a>
+            </div>
             <div 
               style={{width:'100%', height:200, backgroundColor: 'white'}}
               ref={this.chatBox}
@@ -425,6 +437,9 @@ export default class Session extends React.Component {
       });
       
     });
+    
+    init(this.downloadAnchor.current);
+    peerconnection.addEventListener('datachannel', receiveChannelCallback);
   }
 
   componentWillUnmount() {
@@ -525,10 +540,32 @@ export default class Session extends React.Component {
     }
 
     const targetUri = this.props.session.remote_identity.uri.scheme+':'+this.props.session.remote_identity.uri.user+'@'+this.props.session.remote_identity.uri.host;
-    console.log('remote identity : ', this.props.session.remote_identity.uri+ ', target : '+targetUri);
     this.props.ua.sendMessage(targetUri, encodeURI(this.messageInput.current.value), {'eventHandlers': eventHandlers});
-    console.log('encode text : ', encodeURI(this.messageInput.current.value))
     this.messageInput.current.value = '';
+  }
+
+  fileSendInitialize() {
+    console.log('init file send');
+  
+    this.fileInput.current.value = null;
+  }
+
+  handleFileInputChange() {
+    const file = this.fileInput.current.files[0];
+    if (!file) {
+      console.log('No file chosen');
+      return;
+    } 
+    this.sendFileButton.current.addEventListener('click', () => {
+      const fileSendPromise = sendFile(this.props.fileChannel, file);
+      this.sendFileButton.current.disabled = false;
+      fileSendPromise.then(
+        ()=>fileSendInitialize(), 
+        e=>console.error('file send failed, error : ', e)
+      );
+    }, {once:true});
+    
+
   }
 
   async changeStream(originStream, newTrack, stopping=false , kind='video') {
@@ -663,6 +700,7 @@ Session.propTypes =
   onNotify: PropTypes.func.isRequired,
   onHideNotification: PropTypes.func.isRequired,
   bandwidth: PropTypes.string.isRequired,
-  // direction: PropTypes.string.isRequired,
-  audiooutputkey: PropTypes.string.isRequired
+  audiooutputkey: PropTypes.string.isRequired,
+  ua: PropTypes.object.isRequired,
+  // fileChannel: PropTypes.object.isRequired
 };
