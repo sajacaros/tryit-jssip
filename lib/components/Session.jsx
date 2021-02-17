@@ -561,7 +561,7 @@ export default class Session extends React.Component {
       console.log('@@@@ ', this.props.filechannel);
       const fileSendPromise = sendFile(this.props.fileChannel, file);
       fileSendPromise.then(
-        ()=>fileSendInitialize(), 
+        ()=>this.fileSendInitialize(), 
         e=>console.error('file send failed, error : ', e)
       );
     }, {once:true});
