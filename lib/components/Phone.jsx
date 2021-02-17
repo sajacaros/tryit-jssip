@@ -449,12 +449,9 @@ export default class Phone extends React.Component {
       }
     });
 
-    session.on('peerconnection', (data)=> {
-      logger.debug('450 peerconnection : ', data)
-      const datachannel = data.peerconnection.createDataChannel('sendDataChannel');
-      console.log('datachannel : ', datachannel);
-      this.setState({fileChannel:datachannel});
-    });
+    const datachannel = data.peerconnection.createDataChannel('sendDataChannel');
+    console.log('datachannel : ', datachannel);
+    this.setState({fileChannel:datachannel});
   }
 
   handleAnswerIncoming() {

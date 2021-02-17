@@ -81,6 +81,7 @@ export default class Session extends React.Component {
   }
 
   render() {
+    console.log('!@!@ session render', this.props.fileChannel);
     const state = this.state;
     const props = this.props;
     let noRemoteVideo;
@@ -124,7 +125,7 @@ export default class Session extends React.Component {
             <div>
               <div >
                 <input type="file" name="files" onChange={this.handleFileInputChange.bind(this)} ref={this.fileInput}/>
-                <button style={{backgroundColor: '#4CAF50', color: 'white'}} disabled ref={this.sendFileButton}>File Send</button>
+                <button style={{backgroundColor: '#4CAF50', color: 'white'}} ref={this.sendFileButton}>File Send</button>
               </div>
               <a ref={this.downloadAnchor} id="download"></a>
             </div>
@@ -557,8 +558,8 @@ export default class Session extends React.Component {
       return;
     } 
     this.sendFileButton.current.addEventListener('click', () => {
+      console.log('@@@@ ', this.props.filechannel);
       const fileSendPromise = sendFile(this.props.fileChannel, file);
-      this.sendFileButton.current.disabled = false;
       fileSendPromise.then(
         ()=>fileSendInitialize(), 
         e=>console.error('file send failed, error : ', e)
