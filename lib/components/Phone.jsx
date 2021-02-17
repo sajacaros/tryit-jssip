@@ -449,7 +449,7 @@ export default class Phone extends React.Component {
       }
     });
 
-    const datachannel = data.peerconnection.createDataChannel('sendDataChannel');
+    const datachannel = session.connection.createDataChannel('sendDataChannel');
     console.log('datachannel : ', datachannel);
     this.setState({fileChannel:datachannel});
   }
