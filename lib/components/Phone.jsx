@@ -441,7 +441,6 @@ export default class Phone extends React.Component {
       logger.debug("432 origin sdp : ", data.sdp);
       if (data.originator === 'local') {
         const parsedSdp = sdpUtil.parse(data.sdp);
-        logger.debug("!!! sdp : ", parsedSdp);
         sdpUtil.transformSdp(parsedSdp, this.props.settings);
         const transformedSdp = sdpUtil.write(parsedSdp);
         logger.debug("438 tranformed sdp : ", transformedSdp);
@@ -477,6 +476,7 @@ export default class Phone extends React.Component {
       });
   }
 
+  
   handleRejectIncoming() {
     logger.debug('handleRejectIncoming()');
 

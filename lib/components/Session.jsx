@@ -81,7 +81,7 @@ export default class Session extends React.Component {
   }
 
   render() {
-    console.log('!@!@ session render', this.props.fileChannel);
+    console.log('session render');
     const state = this.state;
     const props = this.props;
     let noRemoteVideo;
@@ -558,15 +558,12 @@ export default class Session extends React.Component {
       return;
     } 
     this.sendFileButton.current.addEventListener('click', () => {
-      console.log('@@@@ ', this.props.filechannel);
       const fileSendPromise = sendFile(this.props.fileChannel, file);
       fileSendPromise.then(
         ()=>this.fileSendInitialize(), 
         e=>console.error('file send failed, error : ', e)
       );
     }, {once:true});
-    
-
   }
 
   async changeStream(originStream, newTrack, stopping=false , kind='video') {
