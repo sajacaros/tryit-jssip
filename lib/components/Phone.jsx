@@ -22,7 +22,7 @@ window.jssip = JsSIP;
 // window.jssip.debug.enable('JsSIP:*');
 // window.jssip.debug.enable('tryit-jssip:*');
 // window.jssip.debug.enable('*');
-window.jssip.debug.enable('JsSIP:RTCSession* tryit-jssip:*');
+window.jssip.debug.enable('JsSIP:* tryit-jssip:*');
 
 const callstatsjssip = window.callstatsjssip;
 
@@ -302,7 +302,7 @@ export default class Phone extends React.Component {
       });
 
       session.on('sdp', (data) => {
-        logger.debug("302 origin sdp : ", data.sdp);
+        // logger.debug("302 origin sdp : ", data.sdp);
         if (data.originator === 'local') {
           const parsedSdp = sdpUtil.parse(data.sdp);
           // logger.debug("!!! sdp : ", parsedSdp);
@@ -366,13 +366,13 @@ export default class Phone extends React.Component {
 
   getIceServers({stun, turn}) {
     const iceServers = [];
+    
     if(stun && stun.urls && stun.urls !=='') {
       iceServers.push(stun);
     }
     if(turn && turn.urls && turn.urls !=='') {
       iceServers.push(turn);
     }
-    logger.debug('ice servers : ', iceServers);
     return iceServers;
   }
 
@@ -386,7 +386,7 @@ export default class Phone extends React.Component {
     logger.debug('iceserver : ', iceServers);
     const session = this._ua.call(uri,
       {
-        pcConfig: { 
+        pcConfig: {
           iceServers: iceServers
         },
         mediaConstraints:
@@ -438,7 +438,7 @@ export default class Phone extends React.Component {
     });
 
     session.on('sdp', (data) => {
-      logger.debug("432 origin sdp : ", data.sdp);
+      // logger.debug("432 origin sdp : ", data.sdp);
       if (data.originator === 'local') {
         const parsedSdp = sdpUtil.parse(data.sdp);
         sdpUtil.transformSdp(parsedSdp, this.props.settings);
