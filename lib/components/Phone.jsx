@@ -319,6 +319,19 @@ export default class Phone extends React.Component {
         console.log('datachannel : ', datachannel);
         this.setState({fileChannel:datachannel});
       });
+
+      let calleeCandidateTimeout = null;
+
+      session.on('icecandidate', (candidate) => {
+        logger.debug('getting a candidate' + candidate.candidate.candidate);
+      
+        if (calleeCandidateTimeout != null) {
+          clearTimeout(calleeCandidateTimeout);
+        }
+
+        // 3 seconds timeout after the last icecandidate received!
+        calleeCandidateTimeout = setTimeout(candidate.ready, 3000);
+      });
     });
 
     this._ua.start();
@@ -446,6 +459,19 @@ export default class Phone extends React.Component {
         logger.debug("438 tranformed sdp : ", transformedSdp);
         data.sdp = transformedSdp;
       }
+    });
+
+    let callerCandidateTimeout = null;
+
+    session.on('icecandidate', (candidate) => {
+      logger.debug('getting a candidate' + candidate.candidate.candidate);
+      
+      if (callerCandidateTimeout != null) {
+        clearTimeout(callerCandidateTimeout);
+      }
+
+      // 3 seconds timeout after the last icecandidate received!
+      callerCandidateTimeout = setTimeout(candidate.ready, 3000);
     });
 
     const datachannel = session.connection.createDataChannel('sendDataChannel');
