@@ -190,8 +190,8 @@ export default class Login extends React.Component
 		// If no SIP URI is set, set a random one
 		if (!settings.uri)
 		{
-			const username =
-				`${settings.display_name.toLowerCase().replace(/[^a-zA-Z0-9]/g, '')}_${randomString({ length: 6 }).toLowerCase()}`;
+			const username = `${settings.display_name.toLowerCase().replace(/[^a-zA-Z0-9]/g, '')}`;
+				// `${settings.display_name.toLowerCase().replace(/[^a-zA-Z0-9]/g, '')}_${randomString({ length: 6 }).toLowerCase()}`;
 			const domain = settingsManager.getDefaultDomain();
 
 			settings.uri = `sip:${username}@${domain}`;
